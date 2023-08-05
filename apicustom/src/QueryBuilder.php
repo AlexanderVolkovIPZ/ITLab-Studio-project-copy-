@@ -8,27 +8,11 @@ class QueryBuilder
     protected $type;
     protected $params;
     protected $where;
+    protected $set;
 
     public function __construct()
     {
         $this->params = [];
-    }
-
-    public function select($fields = "*")
-    {
-        $this->type = "select";
-        $fields_string = $fields;
-        if (is_array($fields)) {
-            $fields_string = implode(", ", $fields);
-        }
-        $this->fields = $fields_string;
-        return $this;
-    }
-
-    public function from($table)
-    {
-        $this->table = $table;
-        return $this;
     }
 
     public function getSql()
@@ -43,32 +27,37 @@ class QueryBuilder
             case 'insert':
                 $sql = "INSERT INTO  {$this->table} ({$this->fields['keys']}) VALUES {$this->fields['keys_prepared_query']}";
                 return $sql;
+            case 'update':
+                $sql = "UPDATE {$this->table} SET {$this->set}";
+                if (!empty($this->where)) {
+                    $sql .= " WHERE {$this->where}";
+                }
+                return $sql;
+            case 'delete':
+                $sql = "DELETE FROM {$this->table} ";
+                if (!empty($this->where)) {
+                    $sql .= " WHERE {$this->where}";
+                }
+                return $sql;
         }
     }
 
-    public function where($where)
-    {
-        $where_parts = [];
-        foreach ($where as $key => $value) {
-            $where_parts[] = "{$key} = :{$key}";
-            $this->params[$key] = $value;
-        }
-        $this->where = implode(" AND ", $where_parts);
-        return $this;
-    }
 
     public function getParams()
     {
         return $this->params;
     }
 
-
-    public function into($table)
+    public function select($fields = "*")
     {
-        $this->table = $table;
+        $this->type = "select";
+        $fields_string = $fields;
+        if (is_array($fields)) {
+            $fields_string = implode(", ", $fields);
+        }
+        $this->fields = $fields_string;
         return $this;
     }
-
 
     public function insert($fields)
     {
@@ -77,7 +66,8 @@ class QueryBuilder
         $insert_keys = [];
         $keys_prepared_query = [];
 
-        function is_two_dimensional_array($array) {
+        function is_two_dimensional_array($array)
+        {
             foreach ($array as $element) {
                 if (is_array($element)) {
                     return true;
@@ -94,12 +84,12 @@ class QueryBuilder
                     }
                     if ($sub_key == array_keys($value)[0]) {
                         $keys_prepared_query[] .= "( :{$sub_key}" . $counter;
-                    } elseif ($sub_key == array_keys($value)[count($value)-1]) {
+                    } elseif ($sub_key == array_keys($value)[count($value) - 1]) {
                         $keys_prepared_query[] .= ":{$sub_key}" . $counter . " )";
                     } else {
                         $keys_prepared_query[] .= ":{$sub_key}" . $counter;
                     }
-                    $this->params[$sub_key.$counter] = $sub_value;
+                    $this->params[$sub_key . $counter] = $sub_value;
                 }
                 $counter++;
             }
@@ -109,7 +99,7 @@ class QueryBuilder
 
                 if ($key == array_keys($fields)[0]) {
                     $keys_prepared_query[] .= "( :{$key}";
-                } elseif ($key == array_keys($fields)[count($fields)-1]) {
+                } elseif ($key == array_keys($fields)[count($fields) - 1]) {
                     $keys_prepared_query[] .= ":{$key} )";
                 } else {
                     $keys_prepared_query[] .= ":{$key}";
@@ -123,5 +113,52 @@ class QueryBuilder
         return $this;
     }
 
+    public function update($table)
+    {
+        $this->type = "update";
+        $this->table = $table;
+        return $this;
+    }
+
+    public function delete($table)
+    {
+        $this->type = "delete";
+        $this->table = $table;
+        return $this;
+    }
+
+    public function from($table)
+    {
+        $this->table = $table;
+        return $this;
+    }
+
+    public function into($table)
+    {
+        $this->table = $table;
+        return $this;
+    }
+
+    public function where($where)
+    {
+        $where_parts = [];
+        foreach ($where as $key => $value) {
+            $where_parts[] = "{$key} = :{$key}";
+            $this->params[$key] = $value;
+        }
+        $this->where = implode(" AND ", $where_parts);
+        return $this;
+    }
+
+    public function set($set)
+    {
+        $set_parts = [];
+        foreach ($set as $key => $value) {
+            $set_parts[] = "{$key} = :{$key}";
+            $this->params[$key] = $value;
+        }
+        $this->set = implode(" , ", $set_parts);
+        return $this;
+    }
 
 }
