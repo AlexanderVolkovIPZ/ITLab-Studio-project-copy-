@@ -30,9 +30,5 @@ class FrontController{
         }else{
             echo 'Error 404';
         }
-
-
-
-
     }
 }
