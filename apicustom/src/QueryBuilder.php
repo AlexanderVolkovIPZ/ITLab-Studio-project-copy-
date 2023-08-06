@@ -33,7 +33,7 @@ class QueryBuilder
                     $sql.=" FULL JOIN {$this->full_join['table']} ON {$this->table}.{$this->full_join['field1']} = {$this->full_join['table']}.{$this->full_join['field2']} ";
                 }
                 if(!empty($this->inner_join)){
-                    $sql.=" FULL JOIN {$this->inner_join['table']} ON {$this->table}.{$this->inner_join['field1']} = {$this->inner_join['table']}.{$this->inner_join['field2']} ";
+                    $sql.=" INNER JOIN {$this->inner_join['table']} ON {$this->table}.{$this->inner_join['field1']} = {$this->inner_join['table']}.{$this->inner_join['field2']} ";
                 }
 
                 if (!empty($this->where)) {
