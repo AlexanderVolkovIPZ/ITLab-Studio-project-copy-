@@ -12,6 +12,7 @@ class QueryBuilder
     protected $left_join;
     protected $right_join;
     protected $full_join;
+    protected $inner_join;
     public function __construct()
     {
         $this->params = [];
@@ -30,6 +31,9 @@ class QueryBuilder
                 }
                 if(!empty($this->full_join)){
                     $sql.=" FULL JOIN {$this->full_join['table']} ON {$this->table}.{$this->full_join['field1']} = {$this->full_join['table']}.{$this->full_join['field2']} ";
+                }
+                if(!empty($this->inner_join)){
+                    $sql.=" FULL JOIN {$this->inner_join['table']} ON {$this->table}.{$this->inner_join['field1']} = {$this->inner_join['table']}.{$this->inner_join['field2']} ";
                 }
 
                 if (!empty($this->where)) {
@@ -189,6 +193,12 @@ class QueryBuilder
         $this->full_join['table'] = $table;
         $this->full_join['field1'] = $field_tb1;
         $this->full_join['field2'] = $field_tb2;
+        return $this;
+    }
+    public function inner_join($table, $field_tb1, $field_tb2){
+        $this->inner_join['table'] = $table;
+        $this->inner_join['field1'] = $field_tb1;
+        $this->inner_join['field2'] = $field_tb2;
         return $this;
     }
 }
