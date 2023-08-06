@@ -55,6 +55,30 @@ echo $query->getSql();*/
 $database->execute($query);
 echo $query->getSql();*/
 
+        /*LEFT JOIN SELECT*/
+/*$query->select(["title", "text", "user_id","comment"])
+    ->from('news')
+    ->left_join("comments", "id","news_id")
+    ->where(['news_id'=>6]);
+$rows = $database->execute($query);
+var_dump($rows);
+echo $query->getSql();*/
+
+        /*LEFT JOIN and RIGHT JOIN SELECT*/
+/*$query->select([ "user_id","first_name","middle_name","last_name","comment","title", "text",])
+    ->from('comments')
+    ->left_join("news", "news_id","id")
+    ->right_join("users","user_id","id");
+$rows = $database->execute($query);
+var_dump($rows);
+echo $query->getSql();*/
+
+
+
+
+
+
+
 
 $CoreParams['Database'] = [
     "Host" => "172.22.75.8",

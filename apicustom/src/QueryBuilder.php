@@ -9,7 +9,9 @@ class QueryBuilder
     protected $params;
     protected $where;
     protected $set;
-
+    protected $left_join;
+    protected $right_join;
+    protected $full_join;
     public function __construct()
     {
         $this->params = [];
@@ -20,6 +22,16 @@ class QueryBuilder
         switch ($this->type) {
             case 'select':
                 $sql = "SELECT {$this->fields} FROM {$this->table}";
+                if(!empty($this->left_join)){
+                    $sql.=" LEFT JOIN {$this->left_join['table']} ON {$this->table}.{$this->left_join['field1']} = {$this->left_join['table']}.{$this->left_join['field2']} ";
+                }
+                if(!empty($this->right_join)){
+                    $sql.=" RIGHT JOIN {$this->right_join['table']} ON {$this->table}.{$this->right_join['field1']} = {$this->right_join['table']}.{$this->right_join['field2']} ";
+                }
+                if(!empty($this->full_join)){
+                    $sql.=" FULL JOIN {$this->full_join['table']} ON {$this->table}.{$this->full_join['field1']} = {$this->full_join['table']}.{$this->full_join['field2']} ";
+                }
+
                 if (!empty($this->where)) {
                     $sql .= " WHERE {$this->where}";
                 }
@@ -161,4 +173,22 @@ class QueryBuilder
         return $this;
     }
 
+    public function left_join($table, $field_tb1, $field_tb2){
+        $this->left_join['table'] = $table;
+        $this->left_join['field1'] = $field_tb1;
+        $this->left_join['field2'] = $field_tb2;
+        return $this;
+    }
+    public function right_join($table, $field_tb1, $field_tb2){
+        $this->right_join['table'] = $table;
+        $this->right_join['field1'] = $field_tb1;
+        $this->right_join['field2'] = $field_tb2;
+        return $this;
+    }
+    public function full_join($table, $field_tb1, $field_tb2){
+        $this->full_join['table'] = $table;
+        $this->full_join['field1'] = $field_tb1;
+        $this->full_join['field2'] = $field_tb2;
+        return $this;
+    }
 }
