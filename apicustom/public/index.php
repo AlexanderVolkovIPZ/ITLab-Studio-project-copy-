@@ -25,12 +25,12 @@ $rows = $database->execute($query);*/
     [
         [
             "title" => 'title',
-            "text" => "check1",
+            "text" => "check3",
             "date" => "2023-01-12"
         ],
         [
             "title" => 'title',
-            "text" => "check2",
+            "text" => "check4",
             "date" => "2023-01-12"
         ]
     ]

@@ -98,9 +98,9 @@ class QueryBuilder
                     if (!in_array($sub_key, $insert_keys)) {
                         $insert_keys[] = $sub_key;
                     }
-                    if ($sub_key == array_keys($value)[0]) {
+                    if ($sub_key == array_key_first($value)) {
                         $keys_prepared_query[] .= "( :{$sub_key}" . $counter;
-                    } elseif ($sub_key == array_keys($value)[count($value) - 1]) {
+                    } elseif ($sub_key == array_key_last($value)) {
                         $keys_prepared_query[] .= ":{$sub_key}" . $counter . " )";
                     } else {
                         $keys_prepared_query[] .= ":{$sub_key}" . $counter;
@@ -113,9 +113,9 @@ class QueryBuilder
             foreach ($fields as $key => $value) {
                 $insert_keys[] = $key;
 
-                if ($key == array_keys($fields)[0]) {
+                if ($key == array_key_first($fields)) {
                     $keys_prepared_query[] .= "( :{$key}";
-                } elseif ($key == array_keys($fields)[count($fields) - 1]) {
+                } elseif ($key == array_key_last($value)) {
                     $keys_prepared_query[] .= ":{$key} )";
                 } else {
                     $keys_prepared_query[] .= ":{$key}";
