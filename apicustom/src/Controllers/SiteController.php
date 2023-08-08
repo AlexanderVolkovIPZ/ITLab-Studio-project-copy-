@@ -1,8 +1,10 @@
 <?php
 
+namespace App\Controllers;
 class SiteController
 {
-    public function index(){
+    public function index()
+    {
         echo 'Main page';
     }
 }

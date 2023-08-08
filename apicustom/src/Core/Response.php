@@ -1,5 +1,6 @@
 <?php
-class Responce{
+namespace App\Core;
+class Response{
     protected $title;
     protected $text;
     public function __construct($title, $text){

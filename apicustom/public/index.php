@@ -1,26 +1,41 @@
 <?php
 global $CoreParams;
+
+
+use App\Controllers\FrontController;
+use App\Core\Database\Database;
+
 require_once("../config/config.php");
 spl_autoload_register(function ($className) {
-    $path = "../src/{$className}.php";
+
+    $newClassName = str_replace('\\', "/", $className);
+    if (stripos($newClassName, 'App/',) === 0) {
+        $newClassName = substr($newClassName, 4);
+    }
+    $path = "../src/{$newClassName}.php";
+
     if (file_exists($path)) {
         require_once($path);
     }
 });
 
+$front_controller = new FrontController();
+$front_controller->run();
 
 $database = new Database($CoreParams['Database']['Host'], $CoreParams['Database']['Username'], $CoreParams['Database']['Password'], $CoreParams['Database']['Database']);
 $database->connect();
-$query = new QueryBuilder();
 
-            /*SELECT*/
+
+//$query = new QueryBuilder();
+
+/*SELECT*/
 /*$query->select(["title", "text"])
     ->from('news')
     ->where(["id" => 5]);
 $rows = $database->execute($query);*/
 
 
-            /*INSERT*/
+/*INSERT*/
 /*$query->insert(
     [
         [
@@ -38,7 +53,7 @@ $rows = $database->execute($query);*/
 $database->execute($query);
 echo $query->getSql();*/
 
-            /*UPDATE*/
+/*UPDATE*/
 /*$query->update("news")->set([
     'title'=>'update_title',
     'text'=>'update_text'
@@ -48,14 +63,14 @@ echo $query->getSql();*/
 $database->execute($query);
 echo $query->getSql();*/
 
-        /*DELETE*/
+/*DELETE*/
 /*$query->delete("news")->where([
     'id'=>1
 ]);
 $database->execute($query);
 echo $query->getSql();*/
 
-        /*LEFT JOIN SELECT*/
+/*LEFT JOIN SELECT*/
 /*$query->select(["title", "text", "user_id","comment"])
     ->from('news')
     ->left_join("comments", "id","news_id")
@@ -64,7 +79,7 @@ $rows = $database->execute($query);
 var_dump($rows);
 echo $query->getSql();*/
 
-        /*LEFT JOIN and RIGHT JOIN SELECT*/
+/*LEFT JOIN and RIGHT JOIN SELECT*/
 /*$query->select([ "user_id","first_name","middle_name","last_name","comment","title", "text",])
     ->from('comments')
     ->left_join("news", "news_id","id")
@@ -72,12 +87,6 @@ echo $query->getSql();*/
 $rows = $database->execute($query);
 var_dump($rows);
 echo $query->getSql();*/
-
-
-
-
-
-
 
 
 $CoreParams['Database'] = [
