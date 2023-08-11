@@ -2,8 +2,8 @@
 global $CoreParams;
 
 
-use App\Controllers\FrontController;
 use App\Core\Database\Database;
+use App\Core\FrontController;
 
 require_once("../config/config.php");
 spl_autoload_register(function ($className) {
@@ -26,14 +26,14 @@ $database = new Database($CoreParams['Database']['Host'], $CoreParams['Database'
 $database->connect();
 
 
-//$query = new QueryBuilder();
+$query = new \App\Core\Database\QueryBuilder();
 
 /*SELECT*/
 /*$query->select(["title", "text"])
     ->from('news')
     ->where(["id" => 5]);
-$rows = $database->execute($query);*/
-
+$rows = $database->execute($query);
+var_dump($rows);*/
 
 /*INSERT*/
 /*$query->insert(
@@ -95,6 +95,14 @@ $CoreParams['Database'] = [
     "Password" => "root",
     "Database" => "cms"
 ];
+
+$record = new \App\Core\Database\ActiveRecord($database);
+$record->title = "title=)";
+$record->text = "text=)";
+$record->date = "2023-08-02";
+$record->save('news');
+
+
 
 
 

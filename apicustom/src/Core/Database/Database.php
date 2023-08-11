@@ -8,7 +8,7 @@ class Database
     protected $username;
     protected $password;
     protected $dbname;
-    protected PDO $pdo;
+    protected \PDO $pdo;
 
     public function __construct($host, $username, $password, $dbname)
     {
@@ -16,6 +16,11 @@ class Database
         $this->username = $username;
         $this->password = $password;
         $this->dbname = $dbname;
+    }
+
+    public function __destruct()
+    {
+        unset($this->pdo);
     }
 
     public function getConnectionString()

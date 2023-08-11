@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Core\Database;
-use function is_two_dimensional_array;
 
 class QueryBuilder
 {
@@ -68,7 +67,7 @@ class QueryBuilder
         return $this->params;
     }
 
-    public function select($fields = "*")
+    public function select($fields = "*"):self
     {
         $this->type = "select";
         $fields_string = $fields;
@@ -79,13 +78,12 @@ class QueryBuilder
         return $this;
     }
 
-    public function insert($fields)
+    public function insert($fields):self
     {
         $this->type = "insert";
         $counter = 0;
         $insert_keys = [];
         $keys_prepared_query = [];
-
         function is_two_dimensional_array($array)
         {
             foreach ($array as $element) {
@@ -119,7 +117,7 @@ class QueryBuilder
 
                 if ($key == array_key_first($fields)) {
                     $keys_prepared_query[] .= "( :{$key}";
-                } elseif ($key == array_key_last($value)) {
+                } elseif ($key == array_key_last($fields)) {
                     $keys_prepared_query[] .= ":{$key} )";
                 } else {
                     $keys_prepared_query[] .= ":{$key}";
@@ -133,14 +131,14 @@ class QueryBuilder
         return $this;
     }
 
-    public function update($table)
+    public function update($table):self
     {
         $this->type = "update";
         $this->table = $table;
         return $this;
     }
 
-    public function delete($table)
+    public function delete($table):self
     {
         $this->type = "delete";
         $this->table = $table;
@@ -212,4 +210,5 @@ class QueryBuilder
         $this->inner_join['field2'] = $field_tb2;
         return $this;
     }
+
 }
