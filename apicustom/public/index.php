@@ -2,8 +2,11 @@
 global $CoreParams;
 
 
+use App\Core\Core;
 use App\Core\Database\Database;
 use App\Core\FrontController;
+use App\Core\StaticCore;
+use App\Models\News;
 
 require_once("../config/config.php");
 spl_autoload_register(function ($className) {
@@ -19,12 +22,15 @@ spl_autoload_register(function ($className) {
     }
 });
 
-$front_controller = new FrontController();
-$front_controller->run();
 
-$database = new Database($CoreParams['Database']['Host'], $CoreParams['Database']['Username'], $CoreParams['Database']['Password'], $CoreParams['Database']['Database']);
-$database->connect();
+//StaticCore::Init();
+//StaticCore::Run();
+//StaticCore::Done();
 
+$core = Core::getInstance();
+$core->Init();
+$core->Run();
+$core->Done();
 
 $query = new \App\Core\Database\QueryBuilder();
 
@@ -96,11 +102,11 @@ $CoreParams['Database'] = [
     "Database" => "cms"
 ];
 
-$record = new \App\Core\Database\ActiveRecord($database);
+$record = new News();
 $record->title = "title=)";
 $record->text = "text=)";
 $record->date = "2023-08-02";
-$record->save('news');
+$record->save();
 
 
 

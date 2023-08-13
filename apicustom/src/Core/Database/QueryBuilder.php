@@ -42,23 +42,24 @@ class QueryBuilder
                 if (!empty($this->where)) {
                     $sql .= " WHERE {$this->where}";
                 }
-                return $sql;
+                break;
             case 'insert':
                 $sql = "INSERT INTO  {$this->table} ({$this->fields['keys']}) VALUES {$this->fields['keys_prepared_query']}";
-                return $sql;
+                break;
             case 'update':
                 $sql = "UPDATE {$this->table} SET {$this->set}";
                 if (!empty($this->where)) {
                     $sql .= " WHERE {$this->where}";
                 }
-                return $sql;
+                break;
             case 'delete':
                 $sql = "DELETE FROM {$this->table} ";
                 if (!empty($this->where)) {
                     $sql .= " WHERE {$this->where}";
                 }
-                return $sql;
+                break;
         }
+        return $sql;
     }
 
 
@@ -67,7 +68,7 @@ class QueryBuilder
         return $this->params;
     }
 
-    public function select($fields = "*"):self
+    public function select($fields = "*"): self
     {
         $this->type = "select";
         $fields_string = $fields;
@@ -78,7 +79,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function insert($fields):self
+    public function insert($fields): self
     {
         $this->type = "insert";
         $counter = 0;
@@ -131,14 +132,14 @@ class QueryBuilder
         return $this;
     }
 
-    public function update($table):self
+    public function update($table): self
     {
         $this->type = "update";
         $this->table = $table;
         return $this;
     }
 
-    public function delete($table):self
+    public function delete($table): self
     {
         $this->type = "delete";
         $this->table = $table;

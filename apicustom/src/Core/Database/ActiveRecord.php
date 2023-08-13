@@ -2,14 +2,17 @@
 
 namespace App\Core\Database;
 
+use App\Core\Core;
+use App\Core\StaticCore;
+
 class ActiveRecord
 {
     protected $fields = [];
-    protected Database $database;
+    protected string $table;
 
-    public function __construct(Database $database)
+    public function __construct()
     {
-        $this->database = $database;
+
     }
 
     function __set(string $name, $value): void
@@ -28,9 +31,20 @@ class ActiveRecord
             case 'save':
             {
                 $builder = new QueryBuilder();
-                $builder->insert($this->fields)->into($arguments[0]);
-                $this->database->execute($builder);
+                if (!empty($arguments[0])) {
+                    $this->table = $arguments[0];
+                }
+
+                if (!empty($this->table)) {
+                    $builder->insert($this->fields)->into($this->table);
+                    Core::getInstance()->GetDatabase()->execute($builder);
+//                    StaticCore::GetDatabase()->execute($builder);
+                }else{
+                    //Error
+                }
                 break;
+
+
             }
         }
     }

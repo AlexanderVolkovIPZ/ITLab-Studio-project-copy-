@@ -9,7 +9,8 @@ class Controller
 
     }
 
-    public function render(array $assoc_array):string{
+    public function render(array $assoc_array): string
+    {
         return json_encode($assoc_array);
     }
 }
