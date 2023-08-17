@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProductController extends AbstractController
+class CategoryController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
 
@@ -23,27 +23,22 @@ class ProductController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/product_create', name: 'product_create')]
+    #[Route('/category_create', name: 'category_create')]
     public function create(Request $request): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
 
-        if (!isset($requestData['price'], $requestData['name'], $requestData['description'], $requestData["category"])) {
+        if (!isset($requestData['name'], $requestData['type'])) {
             throw new \Exception("Invalid request data");
         }
-        $category = $this->entityManager->getRepository(Category::class)->find($requestData['category']);
-        if (!$category) {
-            throw new \Exception("Category ${$requestData['category']} not found!");
-        }
-        $product = new Product();
-        $product->setPrice($requestData['price'])
-            ->setName($requestData['name'])
-            ->setDescription($requestData['description'])
-            ->setCategory($category);
 
-        $this->entityManager->persist($product);
+        $category = new Category();
+        $category->setName($requestData['name']);
+        $category->setType($requestData['type']);
+
+        $this->entityManager->persist($category);
         $this->entityManager->flush();
-        return new JsonResponse($product, Response::HTTP_CREATED);
+        return new JsonResponse($category,Response::HTTP_CREATED);
     }
 
     #[Route('/product_read', name: 'product_read')]
@@ -106,29 +101,3 @@ class ProductController extends AbstractController
 
 
 
-
-//Для POST
-//        dd($request->query->all());
-//
-//
-//        //Повернення JSON рядком
-////        $var = json_decode($request->getContent(),true);
-//
-//
-//
-//        //Для GET
-//        dd($request->request->all());
-//        $test = ['test'=>1];
-//
-//        return new JsonResponse($test);
-////        return json_encode($test);
-
-
-//    #[Route('/tmp', name: 'app_test')]
-//    public function tmp(): JsonResponse
-//    {
-//        return $this->json([
-//            'message' => 'Welcome to your tmp controller!',
-//            'path' => 'src/Controller/ProductController.php',
-//        ]);
-//    }
