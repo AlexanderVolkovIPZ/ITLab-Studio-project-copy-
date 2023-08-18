@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping\OneToMany;
 #[ORM\Entity(repositoryClass: CategoryHWRepository::class)]
 class CategoryHW
 {
+    /**
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -27,13 +30,17 @@ class CategoryHW
      * @var string|null
      */
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $img_name = null;
+    private ?string $imgName = null;
+
     /**
      * @var Collection|ArrayCollection|null
      */
     #[OneToMany(mappedBy: 'category', targetEntity: ProductHW::class)]
     private ?Collection $products;
 
+    /**
+     *CategoryHW constructor
+     */
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -71,16 +78,16 @@ class CategoryHW
      */
     public function getImgName(): ?string
     {
-        return $this->img_name;
+        return $this->imgName;
     }
 
     /**
-     * @param string|null $img_name
+     * @param string|null $imgName
      * @return $this
      */
-    public function setImgName(?string $img_name): self
+    public function setImgName(?string $imgName): self
     {
-        $this->img_name = $img_name;
+        $this->imgName = $imgName;
 
         return $this;
     }
@@ -100,6 +107,7 @@ class CategoryHW
     public function setProducts(?Collection $products): self
     {
         $this->products = $products;
+
         return $this;
     }
 }

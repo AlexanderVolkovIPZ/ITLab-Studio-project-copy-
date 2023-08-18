@@ -64,7 +64,7 @@ class ProducerHW
      * @param string $name
      * @return $this
      */
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -83,7 +83,7 @@ class ProducerHW
      * @param string $description
      * @return $this
      */
-    public function setDescription(string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -105,6 +105,7 @@ class ProducerHW
     public function setProducts(?Collection $products): self
     {
         $this->products = $products;
+
         return $this;
     }
 }

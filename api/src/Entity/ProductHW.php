@@ -43,7 +43,7 @@ class ProductHW
      * @var string|null
      */
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $img_name = null;
+    private ?string $imgName = null;
 
     /**
      * @var CategoryHW|null
@@ -60,7 +60,7 @@ class ProductHW
     /**
      * @var Collection|ArrayCollection|null
      */
-    #[OneToMany(mappedBy: 'product',targetEntity: OrderHW::class)]
+    #[OneToMany(mappedBy: 'product', targetEntity: OrderHW::class)]
     private ?Collection $orders;
 
     public function __construct()
@@ -88,7 +88,7 @@ class ProductHW
      * @param string $name
      * @return $this
      */
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -107,7 +107,7 @@ class ProductHW
      * @param int $count
      * @return $this
      */
-    public function setCount(int $count): static
+    public function setCount(int $count): self
     {
         $this->count = $count;
 
@@ -126,7 +126,7 @@ class ProductHW
      * @param string $price
      * @return $this
      */
-    public function setPrice(string $price): static
+    public function setPrice(string $price): self
     {
         $this->price = $price;
 
@@ -138,16 +138,16 @@ class ProductHW
      */
     public function getImgName(): ?string
     {
-        return $this->img_name;
+        return $this->imgName;
     }
 
     /**
-     * @param string|null $img_name
+     * @param string|null $imgName
      * @return $this
      */
-    public function setImgName(?string $img_name): static
+    public function setImgName(?string $imgName): self
     {
-        $this->img_name = $img_name;
+        $this->imgName = $imgName;
 
         return $this;
     }
@@ -164,9 +164,10 @@ class ProductHW
      * @param CategoryHW|null $category
      * @return $this
      */
-    public function setCategory(?CategoryHW $category):self
+    public function setCategory(?CategoryHW $category): self
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -185,6 +186,7 @@ class ProductHW
     public function setOrders(?Collection $orders): self
     {
         $this->orders = $orders;
+
         return $this;
     }
 
@@ -203,6 +205,7 @@ class ProductHW
     public function setProducer(?ProducerHW $producer): self
     {
         $this->producer = $producer;
+
         return $this;
     }
 

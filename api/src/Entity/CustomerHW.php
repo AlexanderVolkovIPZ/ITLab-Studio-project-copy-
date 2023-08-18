@@ -23,19 +23,19 @@ class CustomerHW
      * @var string|null
      */
     #[ORM\Column(length: 255)]
-    private ?string $first_name = null;
+    private ?string $firstName = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255)]
-    private ?string $middle_name = null;
+    private ?string $middleName = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255)]
-    private ?string $last_name = null;
+    private ?string $lastName = null;
 
     /**
      * @var string|null
@@ -66,6 +66,7 @@ class CustomerHW
      */
     #[OneToMany(mappedBy: 'customer', targetEntity: OrderHW::class)]
     private ?Collection $orders;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -84,16 +85,16 @@ class CustomerHW
      */
     public function getFirstName(): ?string
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
     /**
-     * @param string $first_name
+     * @param string $firstName
      * @return $this
      */
-    public function setFirstName(string $first_name): static
+    public function setFirstName(string $firstName): self
     {
-        $this->first_name = $first_name;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -103,16 +104,16 @@ class CustomerHW
      */
     public function getMiddleName(): ?string
     {
-        return $this->middle_name;
+        return $this->middleName;
     }
 
     /**
-     * @param string $middle_name
+     * @param string $middleName
      * @return $this
      */
-    public function setMiddleName(string $middle_name): static
+    public function setMiddleName(string $middleName): self
     {
-        $this->middle_name = $middle_name;
+        $this->middleName = $middleName;
 
         return $this;
     }
@@ -122,16 +123,16 @@ class CustomerHW
      */
     public function getLastName(): ?string
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
     /**
-     * @param string $last_name
+     * @param string $lastName
      * @return $this
      */
-    public function setLastName(string $last_name): static
+    public function setLastName(string $lastName): self
     {
-        $this->last_name = $last_name;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -148,7 +149,7 @@ class CustomerHW
      * @param string $mobile
      * @return $this
      */
-    public function setMobile(string $mobile): static
+    public function setMobile(string $mobile): self
     {
         $this->mobile = $mobile;
 
@@ -167,7 +168,7 @@ class CustomerHW
      * @param string $email
      * @return $this
      */
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -186,7 +187,7 @@ class CustomerHW
      * @param string $city
      * @return $this
      */
-    public function setCity(string $city): static
+    public function setCity(string $city): self
     {
         $this->city = $city;
 
@@ -205,7 +206,7 @@ class CustomerHW
      * @param string $address
      * @return $this
      */
-    public function setAddress(string $address): static
+    public function setAddress(string $address): self
     {
         $this->address = $address;
 

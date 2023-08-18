@@ -32,7 +32,7 @@ class OrderHW
      * @var DateTimeInterface|null
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $date_order = null;
+    private ?DateTimeInterface $dateOrder = null;
 
     /**
      * @var CustomerHW|null
@@ -63,9 +63,10 @@ class OrderHW
      * @param int $count
      * @return $this
      */
-    public function setCount(int $count): static
+    public function setCount(int $count): self
     {
         $this->count = $count;
+
         return $this;
     }
 
@@ -74,16 +75,17 @@ class OrderHW
      */
     public function getDateOrder(): ?DateTimeInterface
     {
-        return $this->date_order;
+        return $this->dateOrder;
     }
 
     /**
-     * @param DateTimeInterface $date_order
+     * @param DateTimeInterface $dateOrder
      * @return $this
      */
-    public function setDateOrder(DateTimeInterface $date_order): static
+    public function setDateOrder(DateTimeInterface $dateOrder): self
     {
-        $this->date_order = $date_order;
+        $this->dateOrder = $dateOrder;
+
         return $this;
     }
 
@@ -102,6 +104,7 @@ class OrderHW
     public function setProduct(?ProductHW $product): self
     {
         $this->product = $product;
+
         return $this;
     }
 }
