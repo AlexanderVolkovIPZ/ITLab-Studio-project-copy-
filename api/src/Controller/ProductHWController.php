@@ -164,6 +164,10 @@ class ProductHWController extends AbstractController
         return new JsonResponse($product);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[Route('/find-product-by-filters', name: 'product_find_by_filters')]
     public function test(Request $request): JsonResponse
     {
@@ -171,11 +175,36 @@ class ProductHWController extends AbstractController
 
         $products = $this->entityManager->getRepository(ProductHW::class)
             ->getAllProductByNames(
-                $requestDate['itemsPerPage'] ?? 20,
+                $requestDate['itemsPerPage'] ?? 5,
                 $requestDate['page'] ?? 1,
+                $requestDate['count'] ?? 1,
+                $requestDate['price'] ?? 1,
+                $requestDate['productName'] ?? null,
+                $requestDate['productImgName'] ?? null,
                 $requestDate['categoryName'] ?? null,
-                $requestDate['name'] ?? null);
-        return new JsonResponse($products);
+                $requestDate['categoryImgName'] ?? null,
+                $requestDate['categoryDescription'] ?? null
+            );
 
+        $tmpResponce = null;
+
+        foreach ($products as $product) {
+            $category = $this->entityManager->getRepository(CategoryHW::class)->find($product->getCategory());
+            $tmpResponce[] = [
+                "id" => $product->getId(),
+                "name" => $product->getName(),
+                "count" => $product->getCount(),
+                "price" => $product->getPrice(),
+                "imgName" => $product->getImgName(),
+                "category" => [
+                    "id" => $category?->getId(),
+                    "name" => $category?->getName(),
+                    "imgName" => $category?->getImgName(),
+                    "description" => $category?->getDescription()
+                ]
+            ];
+        }
+
+        return new JsonResponse($tmpResponce);
     }
 }
