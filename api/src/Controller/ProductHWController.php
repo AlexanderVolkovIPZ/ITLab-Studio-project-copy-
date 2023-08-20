@@ -164,5 +164,18 @@ class ProductHWController extends AbstractController
         return new JsonResponse($product);
     }
 
+    #[Route('/find-product-by-filters', name: 'product_find_by_filters')]
+    public function test(Request $request): JsonResponse
+    {
+        $requestDate = $request->query->all();
 
+        $products = $this->entityManager->getRepository(ProductHW::class)
+            ->getAllProductByNames(
+                $requestDate['itemsPerPage'] ?? 20,
+                $requestDate['page'] ?? 1,
+                $requestDate['categoryName'] ?? null,
+                $requestDate['name'] ?? null);
+        return new JsonResponse($products);
+
+    }
 }
