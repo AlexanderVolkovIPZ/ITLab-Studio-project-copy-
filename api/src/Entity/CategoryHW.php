@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CategoryHWRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
@@ -33,10 +34,16 @@ class CategoryHW
     private ?string $imgName = null;
 
     /**
-     * @var Collection|ArrayCollection|null
+     * @var string|null
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    /**
+     * @var ArrayCollection|Collection|null
      */
     #[OneToMany(mappedBy: 'category', targetEntity: ProductHW::class)]
-    private ?Collection $products;
+    private Collection|ArrayCollection|null $products;
 
     /**
      *CategoryHW constructor
@@ -107,6 +114,18 @@ class CategoryHW
     public function setProducts(?Collection $products): self
     {
         $this->products = $products;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

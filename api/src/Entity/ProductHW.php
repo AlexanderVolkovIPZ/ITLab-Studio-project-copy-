@@ -52,23 +52,6 @@ class ProductHW
     private ?CategoryHW $category = null;
 
     /**
-     * @var ProducerHW|null
-     */
-    #[ManyToOne(targetEntity: ProducerHW::class, inversedBy: "products")]
-    private ?ProducerHW $producer = null;
-
-    /**
-     * @var Collection|ArrayCollection|null
-     */
-    #[OneToMany(mappedBy: 'product', targetEntity: OrderHW::class)]
-    private ?Collection $orders;
-
-    public function __construct()
-    {
-        $this->orders = new ArrayCollection();
-    }
-
-    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -170,43 +153,4 @@ class ProductHW
 
         return $this;
     }
-
-    /**
-     * @return Collection|null
-     */
-    public function getOrders(): ?Collection
-    {
-        return $this->orders;
-    }
-
-    /**
-     * @param Collection|null $orders
-     * @return $this
-     */
-    public function setOrders(?Collection $orders): self
-    {
-        $this->orders = $orders;
-
-        return $this;
-    }
-
-    /**
-     * @return ProducerHW|null
-     */
-    public function getProducer(): ?ProducerHW
-    {
-        return $this->producer;
-    }
-
-    /**
-     * @param ProducerHW|null $producer
-     * @return $this
-     */
-    public function setProducer(?ProducerHW $producer): self
-    {
-        $this->producer = $producer;
-
-        return $this;
-    }
-
 }
