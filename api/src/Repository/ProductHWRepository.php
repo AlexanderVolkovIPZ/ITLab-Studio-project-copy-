@@ -21,6 +21,24 @@ class ProductHWRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductHW::class);
     }
 
+    public function getAllProductByNames(int $itemsPerPage, int $page, ?string $categoryName = null,?string $name = null)
+    {
+        return $this->createQueryBuilder('product')
+            ->join("product.category","category")
+
+            ->andWhere("category.name LIKE :categoryName")
+            ->andWhere("product.name LIKE :name")
+
+            ->setParameter("name","%" . $name . "%")
+            ->setParameter("categoryName","%" . $categoryName . "%")
+
+            ->setFirstResult($itemsPerPage*($page-1))
+            ->setMaxResults($itemsPerPage)
+            ->orderBy("product.name", "DESC")
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return ProductHW[] Returns an array of ProductHW objects
 //     */

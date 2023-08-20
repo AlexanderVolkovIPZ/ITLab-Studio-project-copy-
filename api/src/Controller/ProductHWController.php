@@ -163,4 +163,6 @@ class ProductHWController extends AbstractController
 
         return new JsonResponse($product);
     }
+
+
 }
