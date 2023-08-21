@@ -37,11 +37,9 @@ class ProductHWRepository extends ServiceEntityRepository
      * @return float|int|mixed|string
      */
     public function getAllProductByNames(int     $itemsPerPage, int $page, int $productCount, int $productPrice, ?string $productName = null,
-                                         ?string $productImgName = null, ?string $categoryName = null, ?string $categoryImgName = null, ?string $categoryDescription = null
-    )
+                                         ?string $productImgName = null, ?string $categoryName = null, ?string $categoryImgName = null, ?string $categoryDescription = null)
     {
         return $this->createQueryBuilder('product')
-
             ->join("product.category", "category")
             ->andWhere("product.name LIKE :productName")
             ->andWhere("product.imgName LIKE :productImgName")
@@ -50,7 +48,6 @@ class ProductHWRepository extends ServiceEntityRepository
             ->andWhere("category.description LIKE :categoryDescription")
             ->andWhere("product.count = :productCount")
             ->andWhere("product.price = :productPrice")
-
             ->setParameter("productName", "%" . $productName . "%")
             ->setParameter("productImgName", "%" . $productImgName . "%")
             ->setParameter("categoryName", "%" . $categoryName . "%")
@@ -58,7 +55,6 @@ class ProductHWRepository extends ServiceEntityRepository
             ->setParameter("categoryDescription", "%" . $categoryDescription . "%")
             ->setParameter("productCount", $productCount)
             ->setParameter("productPrice", $productPrice)
-
             ->setFirstResult($itemsPerPage * ($page - 1))
             ->setMaxResults($itemsPerPage)
             ->orderBy("product.name", "DESC")
