@@ -34,11 +34,9 @@ class OrderHW
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $dateOrder = null;
 
-    /**
-     * @var CustomerHW|null
-     */
-    #[ManyToOne(targetEntity: CustomerHW::class, inversedBy: "orders")]
-    private ?CustomerHW $customer = null;
+
+    #[ManyToOne(targetEntity: User::class, inversedBy: "orders")]
+    private ?User $user = null;
 
     /**
      * @var ProductHW|null
