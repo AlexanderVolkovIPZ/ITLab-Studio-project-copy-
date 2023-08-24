@@ -7,11 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
+use JsonSerializable;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     public const ROLE_USER = "ROLE_USER";
     public const ROLE_ADMIN = "ROLE_ADMIN";
@@ -40,16 +42,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = [self::ROLE_USER];
         $this->orders = new ArrayCollection();
     }
+
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return $this
+     */
     public function setEmail(string $email): static
     {
         $this->email = $email;
@@ -83,6 +96,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
        return $this->roles;
     }
 
+    /**
+     * @param array $roles
+     * @return $this
+     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -98,6 +115,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return $this
+     */
     public function setPassword(string $password): static
     {
         $this->password = $password;
@@ -125,13 +146,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * @return Collection|null
+     */
     public function getOrders(): ?Collection
     {
         return $this->orders;
     }
 
+    /**
+     * @param Collection|null $orders
+     * @return void
+     */
     public function setOrders(?Collection $orders): void
     {
         $this->orders = $orders;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize():array
+    {
+        return [
+            'username'=>$this->getUsername(),
+            'password'=>$this->getPassword()
+        ];
     }
 }
