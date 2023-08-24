@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class TestController extends AbstractController
 {
@@ -35,6 +37,5 @@ class TestController extends AbstractController
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
     }
-
 
 }
