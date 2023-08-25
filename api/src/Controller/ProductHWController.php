@@ -38,6 +38,7 @@ class ProductHWController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         $user = $this->getUser();
+
         if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
             $requestData = json_decode($request->getContent(), true);
 
@@ -57,7 +58,6 @@ class ProductHWController extends AbstractController
             }
 
             $product = new ProductHW();
-
             $product->setName($requestData['name'])
                 ->setCount($requestData['count'])
                 ->setPrice($requestData['price'])
@@ -117,6 +117,7 @@ class ProductHWController extends AbstractController
     public function update(string $id): JsonResponse
     {
         $user = $this->getUser();
+
         if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
             $product = $this->entityManager->getRepository(ProductHW::class)->find($id);
 
@@ -142,6 +143,7 @@ class ProductHWController extends AbstractController
     public function delete(string $id): JsonResponse
     {
         $user = $this->getUser();
+
         if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
 
             $product = $this->entityManager->getRepository(ProductHW::class)->find($id);
@@ -157,5 +159,4 @@ class ProductHWController extends AbstractController
             return new JsonResponse("Access denied!");
         }
     }
-
 }

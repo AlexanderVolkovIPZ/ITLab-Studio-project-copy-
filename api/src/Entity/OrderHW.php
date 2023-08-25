@@ -35,7 +35,9 @@ class OrderHW implements JsonSerializable
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $dateOrder = null;
 
-
+    /**
+     * @var User|null
+     */
     #[ManyToOne(targetEntity: User::class, inversedBy: "orders")]
     private ?User $user = null;
 
@@ -45,6 +47,9 @@ class OrderHW implements JsonSerializable
     #[ManyToOne(targetEntity: ProductHW::class, inversedBy: "orders")]
     private ?ProductHW $product = null;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -106,23 +111,37 @@ class OrderHW implements JsonSerializable
 
         return $this;
     }
+
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): void
+    /**
+     * @param User|null $user
+     * @return $this
+     */
+    public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
     }
-    public function jsonSerialize()
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
     {
         return [
-            "id"=>$this->getId(),
-            "count"=>$this->getCount(),
-            "dateOrder"=>$this->getDateOrder(),
-            "product"=>$this->getProduct(),
-            "user"=>$this->getUser()
+            "id" => $this->getId(),
+            "count" => $this->getCount(),
+            "dateOrder" => $this->getDateOrder(),
+            "product" => $this->getProduct(),
+            "user" => $this->getUser()
         ];
     }
 

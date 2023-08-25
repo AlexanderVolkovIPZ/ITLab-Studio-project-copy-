@@ -25,6 +25,9 @@ class LoginController extends AbstractController
         $this->security = $security;
     }
 
+    /**
+     * @return JsonResponse
+     */
     #[Route('/login', name: 'app_login')]
     public function index(): JsonResponse
     {

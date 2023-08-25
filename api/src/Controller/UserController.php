@@ -44,6 +44,7 @@ class UserController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
+
         if(!isset($requestData['username'], $requestData['password'])){
             throw new Exception("Invalid request data");
         }

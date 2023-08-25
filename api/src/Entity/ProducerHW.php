@@ -40,6 +40,9 @@ class ProducerHW implements JsonSerializable
     #[OneToMany(mappedBy: 'producer', targetEntity: ProductHW::class)]
     private ?Collection $products;
 
+    /**
+     * ProducerHW constructor
+     */
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -110,12 +113,15 @@ class ProducerHW implements JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
     {
         return [
-            "id"=>$this->getId(),
-            "name"=>$this->getName(),
-            "description"=>$this->getDescription()
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "description" => $this->getDescription()
         ];
     }
 }

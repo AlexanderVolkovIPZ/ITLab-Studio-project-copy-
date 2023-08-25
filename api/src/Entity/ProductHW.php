@@ -64,6 +64,9 @@ class ProductHW implements JsonSerializable
     #[OneToMany(mappedBy: 'product', targetEntity: OrderHW::class)]
     private ?Collection $orders;
 
+    /**
+     * ProductHW constructor
+     */
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -210,16 +213,19 @@ class ProductHW implements JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
     {
         return [
-            "id"=>$this->getId(),
-            "name"=>$this->getName(),
-            "count"=>$this->getCount(),
-            "price"=>$this->getPrice(),
-            "imgName"=>$this->imgName,
-            "category"=>$this->getCategory(),
-            "producer"=>$this->getProducer()
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "count" => $this->getCount(),
+            "price" => $this->getPrice(),
+            "imgName" => $this->imgName,
+            "category" => $this->getCategory(),
+            "producer" => $this->getProducer()
         ];
     }
 }

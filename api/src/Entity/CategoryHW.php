@@ -40,7 +40,7 @@ class CategoryHW implements JsonSerializable
     private ?Collection $products;
 
     /**
-     *CategoryHW constructor
+     * CategoryHW constructor
      */
     public function __construct()
     {
@@ -112,12 +112,15 @@ class CategoryHW implements JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
     {
         return [
-            "id"=>$this->getId(),
-            "name"=>$this->getImgName(),
-            "imgName"=>$this->getImgName()
+            "id" => $this->getId(),
+            "name" => $this->getImgName(),
+            "imgName" => $this->getImgName()
         ];
     }
 }

@@ -17,14 +17,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 {
     public const ROLE_USER = "ROLE_USER";
     public const ROLE_ADMIN = "ROLE_ADMIN";
+
+    /**
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @var string|null
+     */
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column]
     private array $roles = [];
 
@@ -34,9 +44,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     #[ORM\Column]
     private ?string $password = null;
 
+    /**
+     * @var Collection|ArrayCollection|null
+     */
     #[OneToMany(mappedBy: 'user', targetEntity: OrderHW::class)]
     private ?Collection $orders;
 
+    /**
+     * User constructor
+     */
     public function __construct()
     {
         $this->roles = [self::ROLE_USER];
@@ -63,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @param string $email
      * @return $this
      */
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -100,7 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @param array $roles
      * @return $this
      */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -119,7 +135,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @param string $password
      * @return $this
      */
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -158,9 +174,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @param Collection|null $orders
      * @return void
      */
-    public function setOrders(?Collection $orders): void
+    public function setOrders(?Collection $orders): self
     {
         $this->orders = $orders;
+
+        return $this;
     }
 
     /**

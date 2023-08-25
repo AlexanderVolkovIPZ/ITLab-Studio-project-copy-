@@ -6,7 +6,6 @@ use App\Entity\CategoryHW;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +32,6 @@ class CategoryHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-
     #[Route('/category-hw-create', name: 'category_hw_create')]
     public function create(Request $request): JsonResponse
     {
@@ -41,6 +39,7 @@ class CategoryHWController extends AbstractController
 
         if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
             $requestData = json_decode($request->getContent(), true);
+
             if (!isset($requestData['imgName'], $requestData['name'])) {
                 throw new Exception("Invalid request data");
             }
@@ -110,7 +109,7 @@ class CategoryHWController extends AbstractController
             $this->entityManager->flush();
 
             return new JsonResponse($category);
-        }else{
+        } else {
             return new JsonResponse("Access denied!");
         }
     }
@@ -135,7 +134,7 @@ class CategoryHWController extends AbstractController
             $this->entityManager->flush();
 
             return new JsonResponse($category);
-        }else{
+        } else {
             return new JsonResponse("Access denied!");
         }
     }
