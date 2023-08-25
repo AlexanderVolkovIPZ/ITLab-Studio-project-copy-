@@ -8,9 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: CategoryHWRepository::class)]
-class CategoryHW
+class CategoryHW implements JsonSerializable
 {
     /**
      * @var int|null
@@ -109,5 +110,14 @@ class CategoryHW
         $this->products = $products;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "id"=>$this->getId(),
+            "name"=>$this->getImgName(),
+            "imgName"=>$this->getImgName()
+        ];
     }
 }

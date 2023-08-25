@@ -9,9 +9,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
-class ProductHW
+class ProductHW implements JsonSerializable
 {
     /**
      * @var int|null
@@ -209,4 +210,16 @@ class ProductHW
         return $this;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            "id"=>$this->getId(),
+            "name"=>$this->getName(),
+            "count"=>$this->getCount(),
+            "price"=>$this->getPrice(),
+            "imgName"=>$this->imgName,
+            "category"=>$this->getCategory(),
+            "producer"=>$this->getProducer()
+        ];
+    }
 }

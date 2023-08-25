@@ -28,16 +28,16 @@ class LoginController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function index(): JsonResponse
     {
-        $user =$this->security->getUser();
+        $user = $this->security->getUser();
 
-        if ($user === null) {
+        if (!$user) {
             return $this->json([
                 'message' => 'missing credentials',
             ], Response::HTTP_UNAUTHORIZED);
         }
+
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/LoginController.php',
+            'user' => $user->getUserIdentifier()
         ]);
     }
 }

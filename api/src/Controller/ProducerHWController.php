@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CategoryHW;
 use App\Entity\ProducerHW;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,19 +36,25 @@ class ProducerHWController extends AbstractController
     #[Route('/producer-hw-create', name: 'producer_hw_create')]
     public function create(Request $request): JsonResponse
     {
-        $requestData = json_decode($request->getContent(), true);
+        $user = $this->getUser();
 
-        if (!isset($requestData['name'], $requestData['description'])) {
-            throw new Exception("Invalid request data");
+        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
+            $requestData = json_decode($request->getContent(), true);
+
+            if (!isset($requestData['name'], $requestData['description'])) {
+                throw new Exception("Invalid request data");
+            }
+
+            $producer = new ProducerHW();
+            $producer->setName($requestData['name'])
+                ->setDescription($requestData['description']);
+            $this->entityManager->persist($producer);
+            $this->entityManager->flush();
+
+            return new JsonResponse($producer->jsonSerialize(), Response::HTTP_CREATED);
+        } else {
+            return new JsonResponse("Access denied!");
         }
-
-        $producer = new ProducerHW();
-        $producer->setName($requestData['name'])
-            ->setDescription($requestData['description']);
-        $this->entityManager->persist($producer);
-        $this->entityManager->flush();
-
-        return new JsonResponse($producer, Response::HTTP_CREATED);
     }
 
     /**
@@ -61,11 +68,7 @@ class ProducerHWController extends AbstractController
         $tmpResponce = null;
 
         foreach ($producers as $producer) {
-            $tmpResponce[] = [
-                "id" => $producer->getId(),
-                "name" => $producer->getName(),
-                "description" => $producer->getDescription()
-            ];
+            $tmpResponce[] = $producer->jsonSerialize();
         }
 
         return new JsonResponse($tmpResponce);
@@ -85,7 +88,7 @@ class ProducerHWController extends AbstractController
             throw new Exception("Producer not find!");
         }
 
-        return new JsonResponse($producer);
+        return new JsonResponse($producer->jsonSerialize());
     }
 
     /**
@@ -96,16 +99,22 @@ class ProducerHWController extends AbstractController
     #[Route('/producer-hw-update/{id}', name: 'producer_hw_update')]
     public function update(string $id): JsonResponse
     {
-        $producer = $this->entityManager->getRepository(ProducerHW::class)->find($id);
+        $user = $this->getUser();
+        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
+            $producer = $this->entityManager->getRepository(ProducerHW::class)->find($id);
 
-        if (!$producer) {
-            throw new Exception("Producer not find!");
+            if (!$producer) {
+                throw new Exception("Producer not find!");
+            }
+
+            $producer->setName("Apple")->setDescription("Some Description");
+            $this->entityManager->flush();
+
+            return new JsonResponse($producer);
+
+        } else {
+            return new JsonResponse("Access denied!");
         }
-
-        $producer->setName("Apple")->setDescription("Some Description");
-        $this->entityManager->flush();
-
-        return new JsonResponse($producer);
     }
 
     /**
@@ -116,14 +125,19 @@ class ProducerHWController extends AbstractController
     #[Route('/producer-hw-delete/{id}', name: 'producer_hw_delete')]
     public function delete(string $id): JsonResponse
     {
-        $producer = $this->entityManager->getRepository(ProducerHW::class)->find($id);
+        $user = $this->getUser();
+        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
+            $producer = $this->entityManager->getRepository(ProducerHW::class)->find($id);
 
-        if (!$producer) {
-            throw new \Exception("Producer not found!");
+            if (!$producer) {
+                throw new Exception("Producer not found!");
+            }
+            $this->entityManager->remove($producer);
+            $this->entityManager->flush();
+
+            return new JsonResponse($producer);
+        } else {
+            return new JsonResponse("Access denied!");
         }
-        $this->entityManager->remove($producer);
-        $this->entityManager->flush();
-
-        return new JsonResponse($producer);
     }
 }

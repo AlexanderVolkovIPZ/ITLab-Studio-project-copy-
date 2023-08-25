@@ -10,9 +10,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: OrderHWRepository::class)]
-class OrderHW
+class OrderHW implements JsonSerializable
 {
     /**
      * @var int|null
@@ -105,4 +106,25 @@ class OrderHW
 
         return $this;
     }
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }
+    public function jsonSerialize()
+    {
+        return [
+            "id"=>$this->getId(),
+            "count"=>$this->getCount(),
+            "dateOrder"=>$this->getDateOrder(),
+            "product"=>$this->getProduct(),
+            "user"=>$this->getUser()
+        ];
+    }
+
+
 }
