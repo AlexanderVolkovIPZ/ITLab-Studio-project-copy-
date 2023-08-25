@@ -70,7 +70,7 @@ class OrderHWController extends AbstractController
 
             return new JsonResponse($order->jsonSerialize(), Response::HTTP_CREATED);
         } else {
-            return new JsonResponse("Access denied! You are not just a user!");
+            return new JsonResponse("Access denied! You are not just a user!", Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -128,12 +128,12 @@ class OrderHWController extends AbstractController
                 throw new Exception("Order not found!");
             }
 
-            $order->setCount(11);
+            $order->setCount(105);
             $this->entityManager->flush();
 
             return new JsonResponse($order);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -162,7 +162,7 @@ class OrderHWController extends AbstractController
 
             return new JsonResponse($order);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 }

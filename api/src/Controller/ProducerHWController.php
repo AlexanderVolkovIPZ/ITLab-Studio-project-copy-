@@ -53,7 +53,7 @@ class ProducerHWController extends AbstractController
 
             return new JsonResponse($producer->jsonSerialize(), Response::HTTP_CREATED);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -113,7 +113,7 @@ class ProducerHWController extends AbstractController
             return new JsonResponse($producer);
 
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -137,7 +137,7 @@ class ProducerHWController extends AbstractController
 
             return new JsonResponse($producer);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 }

@@ -187,8 +187,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function jsonSerialize():array
     {
         return [
+            "id"=>$this->getId(),
             'username'=>$this->getUsername(),
-            'password'=>$this->getPassword()
+            "roles"=>$this->getRoles()
         ];
     }
 }

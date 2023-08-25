@@ -70,7 +70,7 @@ class ProductHWController extends AbstractController
 
             return new JsonResponse($product->jsonSerialize(), Response::HTTP_CREATED);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -130,7 +130,7 @@ class ProductHWController extends AbstractController
 
             return new JsonResponse($product);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -156,7 +156,7 @@ class ProductHWController extends AbstractController
 
             return new JsonResponse($product);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 }

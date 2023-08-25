@@ -51,7 +51,7 @@ class CategoryHWController extends AbstractController
             return new JsonResponse($category->jsonSerialize(), Response::HTTP_CREATED);
         }
 
-        return new JsonResponse("Access denied!");
+        return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
     }
 
     /**
@@ -110,7 +110,7 @@ class CategoryHWController extends AbstractController
 
             return new JsonResponse($category);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -135,7 +135,7 @@ class CategoryHWController extends AbstractController
 
             return new JsonResponse($category);
         } else {
-            return new JsonResponse("Access denied!");
+            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
         }
     }
 }
