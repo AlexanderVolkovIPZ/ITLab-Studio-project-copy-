@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\CategoryHW;
-use App\Entity\ProducerHW;
 use App\Entity\ProductHW;
-use App\Entity\User;
+use App\Entity\UserHW;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ProductHWController extends AbstractController
 {
@@ -34,51 +35,43 @@ class ProductHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/product-hw-create', name: 'product_hw_create')]
+    #[Route('/product-hw-create', name: 'product_hw_create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
         $user = $this->getUser();
 
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
-            $requestData = json_decode($request->getContent(), true);
-
-            if (!isset($requestData['name'], $requestData['count'], $requestData['price'], $requestData['imgName'], $requestData['category'], $requestData['producer'])) {
-                throw new Exception("Invalid request data!");
-            }
-            $category = $this->entityManager->getRepository(CategoryHW::class)->find($requestData["category"]);
-
-            if (!$category) {
-                throw new Exception("Category with id " . $requestData['category'] . " not found");
-            }
-
-            $producer = $this->entityManager->getRepository(ProducerHW::class)->find($requestData["producer"]);
-
-            if (!$producer) {
-                throw new Exception("Producer with id " . $requestData['producer'] . " not found");
-            }
-
-            $product = new ProductHW();
-            $product->setName($requestData['name'])
-                ->setCount($requestData['count'])
-                ->setPrice($requestData['price'])
-                ->setImgName($requestData['imgName'])
-                ->setCategory($category)
-                ->setProducer($producer);
-
-            $this->entityManager->persist($product);
-            $this->entityManager->flush();
-
-            return new JsonResponse($product->jsonSerialize(), Response::HTTP_CREATED);
-        } else {
-            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
+        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
+            throw new AccessDeniedException("Access denied!");
         }
+        $requestData = json_decode($request->getContent(), true);
+
+        if (!isset($requestData['name'], $requestData['count'], $requestData['price'], $requestData['imgName'], $requestData['category'])) {
+            throw new Exception("Invalid request data!");
+        }
+        $category = $this->entityManager->getRepository(CategoryHW::class)->find($requestData["category"]);
+
+        if (!$category) {
+            throw new Exception("Category with id " . $requestData['category'] . " not found");
+        }
+
+        $product = new ProductHW();
+        $product->setName($requestData['name'])
+            ->setCount($requestData['count'])
+            ->setPrice($requestData['price'])
+            ->setImgName($requestData['imgName'])
+            ->setCategory($category);
+
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        return new JsonResponse($product->jsonSerialize(), Response::HTTP_CREATED);
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/product-hw-read', name: 'product_hw_read')]
+    #[Route('/product-hw-read', name: 'product_hw_read', methods: ["GET"])]
     public function read(Request $request): JsonResponse
     {
         $products = $this->entityManager->getRepository(ProductHW::class)->findAll();
@@ -88,7 +81,7 @@ class ProductHWController extends AbstractController
             $tmpResponce[] = $product->jsonSerialize();
         }
 
-        return new JsonResponse($tmpResponce);
+        return new JsonResponse($tmpResponce, Response::HTTP_OK);
     }
 
     /**
@@ -96,16 +89,16 @@ class ProductHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/product-hw/{id}', name: 'product_hw_get_item')]
+    #[Route('/product-hw-get/{id}', name: 'product_hw_get_item', methods: ["GET"])]
     public function getItem(string $id): JsonResponse
     {
         $product = $this->entityManager->getRepository(ProductHW::class)->find($id);
 
         if (!$product) {
-            throw new Exception("Product not find!");
+            throw new NotFoundHttpException("Product with id = {$id} not found!");
         }
 
-        return new JsonResponse($product->jsonSerialize());
+        return new JsonResponse($product->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
@@ -113,25 +106,47 @@ class ProductHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/product-hw-update/{id}', name: 'product_hw_update')]
-    public function update(string $id): JsonResponse
+    #[Route('/product-hw-update/{id}', name: 'product_hw_update', methods: ["PATCH"])]
+    public function update(string $id, Request $request): JsonResponse
     {
         $user = $this->getUser();
 
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
-            $product = $this->entityManager->getRepository(ProductHW::class)->find($id);
-
-            if (!$product) {
-                throw new Exception("Product not find!");
-            }
-
-            $product->setName("devices");
-            $this->entityManager->flush();
-
-            return new JsonResponse($product);
-        } else {
-            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
+        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
+            throw new AccessDeniedException("Access Denied!");
         }
+
+        $product = $this->entityManager->getRepository(ProductHW::class)->find($id);
+
+        if (!$product) {
+            throw new NotFoundHttpException("Product not found!");
+        }
+
+        $requestData = json_decode($request->getContent(), true);
+
+        if (isset($requestData['name'])) {
+            $product->setName($requestData['name']);
+        }
+
+        if (isset($requestData['count'])) {
+            $product->setCount($requestData['count']);
+        }
+
+        if (isset($requestData['price'])) {
+            $product->setPrice($requestData['price']);
+        }
+
+        if (isset($requestData['imgName'])) {
+            $product->setImgName($requestData['imgName']);
+        }
+
+        if (isset($requestData['category'])) {
+            $category = $this->entityManager->getRepository(CategoryHW::class)->find($requestData['category']);
+            isset($category) ? $product->setCategory($category) : throw new Exception("Invalid request data!");
+        }
+
+        $this->entityManager->flush();
+
+        return new JsonResponse($product,Response::HTTP_OK);
     }
 
     /**
@@ -139,24 +154,22 @@ class ProductHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/product-hw-delete/{id}', name: 'product_hw_delete')]
+    #[Route('/product-hw-delete/{id}', name: 'product_hw_delete', methods: ["DELETE"])]
     public function delete(string $id): JsonResponse
     {
         $user = $this->getUser();
 
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
-
-            $product = $this->entityManager->getRepository(ProductHW::class)->find($id);
-
-            if (!$product) {
-                throw new Exception("Product not found!");
-            }
-            $this->entityManager->remove($product);
-            $this->entityManager->flush();
-
-            return new JsonResponse($product);
-        } else {
-            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
+        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
+            throw new AccessDeniedException("Access Denied!");
         }
+        $product = $this->entityManager->getRepository(ProductHW::class)->find($id);
+
+        if (!$product) {
+            throw new NotFoundHttpException("Product not found!");
+        }
+        $this->entityManager->remove($product);
+        $this->entityManager->flush();
+
+        return new JsonResponse($product, Response::HTTP_NO_CONTENT);
     }
 }

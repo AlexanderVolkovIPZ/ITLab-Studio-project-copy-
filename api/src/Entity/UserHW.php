@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\UserHWRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
+#[ORM\Entity(repositoryClass: UserHWRepository::class)]
+class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     public const ROLE_USER = "ROLE_USER";
     public const ROLE_ADMIN = "ROLE_ADMIN";
@@ -48,7 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @var Collection|ArrayCollection|null
      */
     #[OneToMany(mappedBy: 'user', targetEntity: OrderHW::class)]
-    private ?Collection $orders;
+    private ?Collection $order;
 
     /**
      * User constructor
@@ -56,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function __construct()
     {
         $this->roles = [self::ROLE_USER];
-        $this->orders = new ArrayCollection();
+        $this->order = new ArrayCollection();
     }
 
     /**
@@ -165,18 +165,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     /**
      * @return Collection|null
      */
-    public function getOrders(): ?Collection
+    public function getOrder(): ?Collection
     {
-        return $this->orders;
+        return $this->order;
     }
 
     /**
-     * @param Collection|null $orders
+     * @param Collection|null $order
      * @return void
      */
-    public function setOrders(?Collection $orders): self
+    public function setOrder(?Collection $order): self
     {
-        $this->orders = $orders;
+        $this->order = $order;
 
         return $this;
     }

@@ -24,28 +24,27 @@ class OrderHW implements JsonSerializable
     private ?int $id = null;
 
     /**
-     * @var int|null
-     */
-    #[ORM\Column]
-    private ?int $count = null;
-
-    /**
      * @var DateTimeInterface|null
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $dateOrder = null;
 
     /**
-     * @var User|null
+     * @var UserHW|null
      */
-    #[ManyToOne(targetEntity: User::class, inversedBy: "orders")]
-    private ?User $user = null;
+    #[ManyToOne(targetEntity: UserHW::class, inversedBy: "order")]
+    private ?UserHW $user = null;
+
+    #[OneToMany(mappedBy: 'order', targetEntity: ContentOrderHW::class)]
+    private ?Collection $contentOrder;
 
     /**
-     * @var ProductHW|null
+     * OrderyHW constructor
      */
-    #[ManyToOne(targetEntity: ProductHW::class, inversedBy: "orders")]
-    private ?ProductHW $product = null;
+    public function __construct()
+    {
+        $this->contentOrder = new ArrayCollection();
+    }
 
     /**
      * @return int|null
@@ -53,25 +52,6 @@ class OrderHW implements JsonSerializable
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCount(): ?int
-    {
-        return $this->count;
-    }
-
-    /**
-     * @param int $count
-     * @return $this
-     */
-    public function setCount(int $count): self
-    {
-        $this->count = $count;
-
-        return $this;
     }
 
     /**
@@ -94,39 +74,39 @@ class OrderHW implements JsonSerializable
     }
 
     /**
-     * @return ProductHW|null
+     * @return UserHW|null
      */
-    public function getProduct(): ?ProductHW
-    {
-        return $this->product;
-    }
-
-    /**
-     * @param ProductHW|null $product
-     * @return $this
-     */
-    public function setProduct(?ProductHW $product): self
-    {
-        $this->product = $product;
-
-        return $this;
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getUser(): ?User
+    public function getUser(): ?UserHW
     {
         return $this->user;
     }
 
     /**
-     * @param User|null $user
+     * @param UserHW|null $user
      * @return $this
      */
-    public function setUser(?User $user): self
+    public function setUser(?UserHW $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|null
+     */
+    public function getContentOrder(): ?Collection
+    {
+        return $this->contentOrder;
+    }
+
+    /**
+     * @param Collection|null $contentOrder
+     * @return $this
+     */
+    public function setContentOrder(?Collection $contentOrder): self
+    {
+        $this->contentOrder = $contentOrder;
 
         return $this;
     }
@@ -138,12 +118,8 @@ class OrderHW implements JsonSerializable
     {
         return [
             "id" => $this->getId(),
-            "count" => $this->getCount(),
             "dateOrder" => $this->getDateOrder(),
-            "product" => $this->getProduct(),
-            "user" => $this->getUser()
+            "user"=>$this->getUser()
         ];
     }
-
-
 }

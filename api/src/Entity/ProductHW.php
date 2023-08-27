@@ -53,23 +53,17 @@ class ProductHW implements JsonSerializable
     private ?CategoryHW $category = null;
 
     /**
-     * @var ProducerHW|null
-     */
-    #[ManyToOne(targetEntity: ProducerHW::class, inversedBy: "products")]
-    private ?ProducerHW $producer = null;
-
-    /**
      * @var Collection|ArrayCollection|null
      */
-    #[OneToMany(mappedBy: 'product', targetEntity: OrderHW::class)]
-    private ?Collection $orders;
+    #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
+    private ?Collection $contentOrder;
 
     /**
      * ProductHW constructor
      */
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
+        $this->contentOrder = new ArrayCollection();
     }
 
     /**
@@ -178,37 +172,18 @@ class ProductHW implements JsonSerializable
     /**
      * @return Collection|null
      */
-    public function getOrders(): ?Collection
+    public function getContentOrder(): ?Collection
     {
-        return $this->orders;
+        return $this->contentOrder;
     }
 
     /**
-     * @param Collection|null $orders
+     * @param Collection|null $contentOrder
      * @return $this
      */
-    public function setOrders(?Collection $orders): self
+    public function setContentOrder(?Collection $contentOrder): self
     {
-        $this->orders = $orders;
-
-        return $this;
-    }
-
-    /**
-     * @return ProducerHW|null
-     */
-    public function getProducer(): ?ProducerHW
-    {
-        return $this->producer;
-    }
-
-    /**
-     * @param ProducerHW|null $producer
-     * @return $this
-     */
-    public function setProducer(?ProducerHW $producer): self
-    {
-        $this->producer = $producer;
+        $this->contentOrder = $contentOrder;
 
         return $this;
     }
@@ -225,7 +200,6 @@ class ProductHW implements JsonSerializable
             "price" => $this->getPrice(),
             "imgName" => $this->imgName,
             "category" => $this->getCategory(),
-            "producer" => $this->getProducer()
         ];
     }
 }

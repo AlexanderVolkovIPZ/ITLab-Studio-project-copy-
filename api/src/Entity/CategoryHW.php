@@ -119,7 +119,7 @@ class CategoryHW implements JsonSerializable
     {
         return [
             "id" => $this->getId(),
-            "name" => $this->getImgName(),
+            "name" => $this->getName(),
             "imgName" => $this->getImgName()
         ];
     }

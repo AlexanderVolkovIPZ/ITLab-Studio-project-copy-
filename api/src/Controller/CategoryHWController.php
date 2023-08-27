@@ -3,14 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\CategoryHW;
-use App\Entity\User;
+use App\Entity\UserHW;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CategoryHWController extends AbstractController
 {
@@ -32,33 +34,33 @@ class CategoryHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/category-hw-create', name: 'category_hw_create')]
+    #[Route('/category-hw-create', name: 'category_hw_create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
         $user = $this->getUser();
 
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
-            $requestData = json_decode($request->getContent(), true);
-
-            if (!isset($requestData['imgName'], $requestData['name'])) {
-                throw new Exception("Invalid request data");
-            }
-            $category = new CategoryHW();
-            $category->setName($requestData['name'])->setImgName($requestData['imgName']);
-            $this->entityManager->persist($category);
-            $this->entityManager->flush();
-
-            return new JsonResponse($category->jsonSerialize(), Response::HTTP_CREATED);
+        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
+            throw new AccessDeniedException("Access Denied!");
         }
 
-        return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
+        $requestData = json_decode($request->getContent(), true);
+
+        if (!isset($requestData['imgName'], $requestData['name'])) {
+            throw new Exception("Invalid request data");
+        }
+        $category = new CategoryHW();
+        $category->setName($requestData['name'])->setImgName($requestData['imgName']);
+        $this->entityManager->persist($category);
+        $this->entityManager->flush();
+
+        return new JsonResponse($category->jsonSerialize(), Response::HTTP_CREATED);
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/category-hw-read', name: 'category_hw_read')]
+    #[Route('/category-hw-read', name: 'category_hw_read', methods: ["GET"])]
     public function read(Request $request): JsonResponse
     {
         $categories = $this->entityManager->getRepository(CategoryHW::class)->findAll();
@@ -68,7 +70,7 @@ class CategoryHWController extends AbstractController
             $tmpResponce[] = $category->jsonSerialize();
         }
 
-        return new JsonResponse($tmpResponce);
+        return new JsonResponse($tmpResponce, Response::HTTP_OK);
     }
 
     /**
@@ -76,16 +78,16 @@ class CategoryHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/category-hw/{id}', name: 'category_hw_get_item')]
+    #[Route('/category-hw-get/{id}', name: 'category_hw_get', methods: ['GET'])]
     public function getItem(string $id): JsonResponse
     {
         $category = $this->entityManager->getRepository(CategoryHW::class)->find($id);
 
         if (!$category) {
-            throw new Exception("Product not find!");
+            throw new NotFoundHttpException("Category with id = {$id} not found!");
         }
 
-        return new JsonResponse($category->jsonSerialize());
+        return new JsonResponse($category->jsonSerialize(), Response::HTTP_OK);
     }
 
     /**
@@ -93,25 +95,34 @@ class CategoryHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/category-hw-update/{id}', name: 'category_hw_update')]
-    public function update(string $id): JsonResponse
+    #[Route('/category-hw-update/{id}', name: 'category_hw_update', methods: ['PATCH'])]
+    public function update(string $id, Request $request): JsonResponse
     {
         $user = $this->getUser();
 
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
-            $category = $this->entityManager->getRepository(CategoryHW::class)->find($id);
-
-            if (!$category) {
-                throw new Exception("Category not find!");
-            }
-
-            $category->setName("планшети");
-            $this->entityManager->flush();
-
-            return new JsonResponse($category);
-        } else {
-            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
+        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
+            throw new AccessDeniedException("Access Denied!");
         }
+
+        $category = $this->entityManager->getRepository(CategoryHW::class)->find($id);
+
+        if (!$category) {
+            throw new NotFoundHttpException("Category not found!");
+        }
+
+        $requestData = json_decode($request->getContent(), true);
+
+        if (isset($requestData['name'])) {
+            $category->setName($requestData['name']);
+        }
+
+        if (isset($requestData['imgName'])) {
+            $category->setImgName($requestData['imgName']);
+        }
+
+        $this->entityManager->flush();
+
+        return new JsonResponse($category, Response::HTTP_OK);
     }
 
     /**
@@ -119,23 +130,22 @@ class CategoryHWController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    #[Route('/category-hw-delete/{id}', name: 'category_hw_delete')]
+    #[Route('/category-hw-delete/{id}', name: 'category_hw_delete', methods: ["DELETE"])]
     public function delete(string $id): JsonResponse
     {
         $user = $this->getUser();
 
-        if (in_array(User::ROLE_ADMIN, $user->getRoles())) {
-            $category = $this->entityManager->getRepository(CategoryHW::class)->find($id);
-
-            if (!$category) {
-                throw new Exception("Category not found!");
-            }
-            $this->entityManager->remove($category);
-            $this->entityManager->flush();
-
-            return new JsonResponse($category);
-        } else {
-            return new JsonResponse("Access denied!",Response::HTTP_FORBIDDEN);
+        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
+            throw new AccessDeniedException("Access Denied!");
         }
+        $category = $this->entityManager->getRepository(CategoryHW::class)->find($id);
+
+        if (!$category) {
+            throw new NotFoundHttpException("Category not found!");
+        }
+        $this->entityManager->remove($category);
+        $this->entityManager->flush();
+
+        return new JsonResponse($category, Response::HTTP_NO_CONTENT);
     }
 }
