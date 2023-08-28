@@ -64,14 +64,14 @@ class CategoryHWController extends AbstractController
         if (!isset($requestData['imgName'], $requestData['name'])) {
             throw new Exception("Invalid request data");
         }
-        $category = new CategoryHW();
-        $category->setName($requestData['name'])->setImgName($requestData['imgName']);
 
         $category = $this->denormalizer->denormalize($requestData, CategoryHW::class, "array");
         $errors = $this->validator->validate($category);
         if(count($errors)>0){
             throw new Exception((string)$errors);
         }
+
+        $category->setName($requestData['name'])->setImgName($requestData['imgName']);
 
         $this->entityManager->persist($category);
         $this->entityManager->flush();

@@ -54,7 +54,7 @@ class CountProductValidator extends ConstraintValidator
         }
 
         if ($countProductOrder + $countProductCurrentItem > 3) {
-            $this->context->addViolation("Error");
+            $this->context->addViolation("Error! We already have 3 products in order!");
         }
     }
 }

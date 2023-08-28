@@ -46,7 +46,7 @@ class CountOrderValidator extends ConstraintValidator
         ]);
 
         if (count($orders) == 2) {
-            $this->context->addViolation("Error");
+            $this->context->addViolation("Error! We already have two orders!");
         }
     }
 }

@@ -90,7 +90,6 @@ class ContentOrderHWController extends AbstractController
             throw new Exception((string)$errors);
         }
 
-        $contentOrder = new ContentOrderHW();
         $contentOrder->setOrder($order)->setProduct($product)->setCount($requestData['count']);
 
         $this->entityManager->persist($contentOrder);

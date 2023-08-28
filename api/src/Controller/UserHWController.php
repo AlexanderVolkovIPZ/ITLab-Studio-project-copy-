@@ -16,6 +16,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 class UserHWController extends AbstractController
 {
     /**
@@ -66,19 +67,18 @@ class UserHWController extends AbstractController
             throw new Exception("Invalid request data",);
         }
 
-        $user = new UserHW();
+        $user = $this->denormalizer->denormalize($requestData, UserHW::class, "array");
+        $errors = $this->validator->validate($user);
+        if (count($errors) > 0) {
+            throw new Exception((string)$errors);
+        }
+
         $user->setEmail($requestData['username']);
         $hashedPassword = $this->passwordHasher->hashPassword(
             $user,
             $requestData['password']
         );
         $user->setPassword($hashedPassword);
-
-       /* $user = $this->denormalizer->denormalize($requestData, UserHW::class, "array");
-        $errors = $this->validator->validate($user);
-        if(count($errors)>0){
-            throw new Exception((string)$errors);
-        }*/
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -156,7 +156,7 @@ class UserHWController extends AbstractController
      * @param string $id
      * @return JsonResponse
      */
-    #[Route('/user-hw-delete/{id}', name: 'user_hw_delete',methods: ["DELETE"])]
+    #[Route('/user-hw-delete/{id}', name: 'user_hw_delete', methods: ["DELETE"])]
     public function delete(string $id): JsonResponse
     {
 

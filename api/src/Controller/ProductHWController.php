@@ -70,19 +70,18 @@ class ProductHWController extends AbstractController
             throw new Exception("Category with id " . $requestData['category'] . " not found");
         }
 
-        $product = new ProductHW();
+        $product = $this->denormalizer->denormalize($requestData, ProductHW::class, "array");
+        $errors = $this->validator->validate($product);
+
+        if (count($errors) > 0) {
+            throw new Exception((string)$errors);
+        }
+
         $product->setName($requestData['name'])
             ->setCount($requestData['count'])
             ->setPrice($requestData['price'])
             ->setImgName($requestData['imgName'])
             ->setCategory($category);
-
-/*        $product = $this->denormalizer->denormalize($requestData, ProductHW::class, "array");
-        $errors = $this->validator->validate($product);
-
-        if(count($errors)>0){
-            throw new Exception((string)$errors);
-        }*/
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();
@@ -170,7 +169,7 @@ class ProductHWController extends AbstractController
 
         $this->entityManager->flush();
 
-        return new JsonResponse($product,Response::HTTP_OK);
+        return new JsonResponse($product, Response::HTTP_OK);
     }
 
     /**

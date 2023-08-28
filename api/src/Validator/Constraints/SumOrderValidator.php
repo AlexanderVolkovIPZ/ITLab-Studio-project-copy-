@@ -54,7 +54,7 @@ class SumOrderValidator extends ConstraintValidator
         }
 
         if ($sumOrder+$sumCurrentItem > 1000) {
-            $this->context->addViolation("Error");
+            $this->context->addViolation("Error! Sum order can't be more than 1000 hryvnias!");
         }
     }
 }
