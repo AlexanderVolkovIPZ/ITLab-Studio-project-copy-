@@ -37,18 +37,12 @@ class CategoryHW implements JsonSerializable
     #[Assert\Length(min: 5)]
     private ?string $imgName = null;
 
-    /**
-     * @var Collection|ArrayCollection|null
-     */
-    #[OneToMany(mappedBy: 'category', targetEntity: ProductHW::class)]
-    private ?Collection $products;
 
     /**
      * CategoryHW constructor
      */
     public function __construct()
     {
-        $this->products = new ArrayCollection();
     }
 
     /**
@@ -93,25 +87,6 @@ class CategoryHW implements JsonSerializable
     public function setImgName(?string $imgName): self
     {
         $this->imgName = $imgName;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|null
-     */
-    public function getProducts(): ?Collection
-    {
-        return $this->products;
-    }
-
-    /**
-     * @param Collection|null $products
-     * @return $this
-     */
-    public function setProducts(?Collection $products): self
-    {
-        $this->products = $products;
 
         return $this;
     }

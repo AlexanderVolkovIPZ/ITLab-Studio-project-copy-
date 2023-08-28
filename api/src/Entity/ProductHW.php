@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductHWRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +14,20 @@ use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
+#[Constraint]
+#[ApiResource(collectionOperations: [
+    "get"=>[
+        "method"=>"GET",
+        "security"=>"is_granted ('".UserHW::ROLE_USER."')"
+    ]
+], itemOperations: [
+    "get"=>[
+        "method"=>"GET"
+    ]
+],attributes: [
+    "security"=>"is_granted ('".UserHW::ROLE_ADMIN."') or is_granted ('".UserHW::ROLE_USER."')"
+]
+)]
 class ProductHW implements JsonSerializable
 {
     /**
