@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OrderHWRepository;
+use App\Validator\Constraints\SumOrder;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -36,6 +37,9 @@ class OrderHW implements JsonSerializable
     #[ManyToOne(targetEntity: UserHW::class, inversedBy: "order")]
     private ?UserHW $user = null;
 
+    /**
+     * @var Collection|ArrayCollection|null
+     */
     #[OneToMany(mappedBy: 'order', targetEntity: ContentOrderHW::class)]
     private ?Collection $contentOrder;
 

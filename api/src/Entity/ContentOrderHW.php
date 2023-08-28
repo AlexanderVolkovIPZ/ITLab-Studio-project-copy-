@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\ContentOrderHWRepository;
+use App\Validator\Constraints\SumOrder;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContentOrderHWRepository::class)]
+#[SumOrder]
 class ContentOrderHW implements JsonSerializable
 {
     /**
@@ -17,14 +19,14 @@ class ContentOrderHW implements JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Assert\Positive]
+//`    #[Assert\Positive]`
     private ?int $id = null;
 
     /**
      * @var int|null
      */
     #[ORM\Column]
-    #[Assert\PositiveOrZero]
+//    #[Assert\PositiveOrZero]
     private ?int $count = null;
 
     /**

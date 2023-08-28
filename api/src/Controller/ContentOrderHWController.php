@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -53,6 +54,7 @@ class ContentOrderHWController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      * @throws Exception
+     * @throws ExceptionInterface
      */
     #[Route('/content-order-hw-create', name: 'content_order_hw_create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
@@ -79,6 +81,13 @@ class ContentOrderHWController extends AbstractController
 
         if (empty($product) || empty($order)) {
             throw new Exception("Invalid request data!");
+        }
+
+        $contentOrder = $this->denormalizer->denormalize($requestData, ContentOrderHW::class, "array");
+        $errors = $this->validator->validate($contentOrder);
+
+        if (count($errors) > 0) {
+            throw new Exception((string)$errors);
         }
 
         $contentOrder = new ContentOrderHW();

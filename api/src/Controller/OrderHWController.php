@@ -25,7 +25,15 @@ class OrderHWController extends AbstractController
      * @var EntityManagerInterface
      */
     private EntityManagerInterface $entityManager;
+
+    /**
+     * @var DenormalizerInterface
+     */
     private DenormalizerInterface $denormalizer;
+
+    /**
+     * @var ValidatorInterface
+     */
     private ValidatorInterface $validator;
 
     /**

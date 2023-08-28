@@ -21,49 +21,49 @@ class ProductHW implements JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Assert\Unique]
+//    #[Assert\Unique]
     private ?int $id = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255)]
-    #[Assert\Length(min: 3)]
+//    #[Assert\Length(min: 3)]
     private ?string $name = null;
 
     /**
      * @var int|null
      */
     #[ORM\Column]
-    #[Assert\PositiveOrZero]
+//    #[Assert\PositiveOrZero]
     private ?int $count = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
-    #[Assert\NotBlank]
+//    #[Assert\NotBlank]
     private ?string $price = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(min: 5)]
+//    #[Assert\Length(min: 5)]
     private ?string $imgName = null;
 
     /**
      * @var CategoryHW|null
      */
     #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
-    #[Assert\NotBlank]
+//    #[Assert\NotBlank]
     private ?CategoryHW $category = null;
 
     /**
      * @var Collection|ArrayCollection|null
      */
     #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
-    #[Assert\NotBlank]
+//    #[Assert\NotBlank]
     private ?Collection $contentOrder;
 
     /**

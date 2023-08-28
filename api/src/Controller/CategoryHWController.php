@@ -32,7 +32,13 @@ class CategoryHWController extends AbstractController
      * @var ValidatorInterface
      */
     private ValidatorInterface $validator;
-    public function __construct(EntityManagerInterface $entityManager,DenormalizerInterface $denormalizer, ValidatorInterface $validator)
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param DenormalizerInterface $denormalizer
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(EntityManagerInterface $entityManager, DenormalizerInterface $denormalizer, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
         $this->denormalizer = $denormalizer;
