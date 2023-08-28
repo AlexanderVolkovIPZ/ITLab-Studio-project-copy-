@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductHWController extends AbstractController
 {
@@ -23,11 +25,25 @@ class ProductHWController extends AbstractController
     private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @var DenormalizerInterface
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    private DenormalizerInterface $denormalizer;
+
+    /**
+     * @var ValidatorInterface
+     */
+    private ValidatorInterface $validator;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param DenormalizerInterface $denormalizer
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(EntityManagerInterface $entityManager, DenormalizerInterface $denormalizer, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
+        $this->denormalizer = $denormalizer;
+        $this->validator = $validator;
     }
 
     /**
@@ -60,6 +76,13 @@ class ProductHWController extends AbstractController
             ->setPrice($requestData['price'])
             ->setImgName($requestData['imgName'])
             ->setCategory($category);
+
+/*        $product = $this->denormalizer->denormalize($requestData, ProductHW::class, "array");
+        $errors = $this->validator->validate($product);
+
+        if(count($errors)>0){
+            throw new Exception((string)$errors);
+        }*/
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();
@@ -103,6 +126,7 @@ class ProductHWController extends AbstractController
 
     /**
      * @param string $id
+     * @param Request $request
      * @return JsonResponse
      * @throws Exception
      */

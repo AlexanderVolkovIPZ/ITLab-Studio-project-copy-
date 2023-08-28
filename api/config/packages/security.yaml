@@ -29,5 +29,5 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/category-hw-(read|get/\d+), roles: PUBLIC_ACCESS }
         - { path: ^/api/product-hw-(read|get/\d+), roles: PUBLIC_ACCESS }
-        - { path: ^/api/user-create, roles: PUBLIC_ACCESS }
+        - { path: ^/api/user-hw-create, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }

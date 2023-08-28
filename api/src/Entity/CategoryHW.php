@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryHWRepository::class)]
 class CategoryHW implements JsonSerializable
@@ -19,18 +20,21 @@ class CategoryHW implements JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Unique]
     private ?int $id = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min: 3)]
     private ?string $name = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(min: 5)]
     private ?string $imgName = null;
 
     /**

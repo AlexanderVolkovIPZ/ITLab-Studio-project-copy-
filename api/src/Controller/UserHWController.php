@@ -14,7 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserHWController extends AbstractController
 {
     /**
@@ -28,13 +29,27 @@ class UserHWController extends AbstractController
     private UserPasswordHasherInterface $passwordHasher;
 
     /**
+     * @var DenormalizerInterface
+     */
+    private DenormalizerInterface $denormalizer;
+
+    /**
+     * @var ValidatorInterface
+     */
+    private ValidatorInterface $validator;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordHasherInterface $passwordHasher
+     * @param DenormalizerInterface $denormalizer
+     * @param ValidatorInterface $validator
      */
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, DenormalizerInterface $denormalizer, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
+        $this->denormalizer = $denormalizer;
+        $this->validator = $validator;
     }
 
     /**
@@ -58,6 +73,13 @@ class UserHWController extends AbstractController
             $requestData['password']
         );
         $user->setPassword($hashedPassword);
+
+       /* $user = $this->denormalizer->denormalize($requestData, UserHW::class, "array");
+        $errors = $this->validator->validate($user);
+        if(count($errors)>0){
+            throw new Exception((string)$errors);
+        }*/
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 

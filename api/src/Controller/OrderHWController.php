@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrderHWController extends AbstractController
 {
@@ -23,13 +25,19 @@ class OrderHWController extends AbstractController
      * @var EntityManagerInterface
      */
     private EntityManagerInterface $entityManager;
+    private DenormalizerInterface $denormalizer;
+    private ValidatorInterface $validator;
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param DenormalizerInterface $denormalizer
+     * @param ValidatorInterface $validator
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, DenormalizerInterface $denormalizer, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
+        $this->denormalizer = $denormalizer;
+        $this->validator = $validator;
     }
 
     /**
@@ -60,6 +68,13 @@ class OrderHWController extends AbstractController
 
         $order = new OrderHW();
         $order->setUser($userOrder)->setDateOrder(new DateTime($requestData['dateOrder']));
+
+//        $order = $this->denormalizer->denormalize($requestData, OrderHW::class, "array");
+//        $errors = $this->validator->validate($order);
+//
+//        if (count($errors) > 0) {
+//            throw new Exception((string)$errors);
+//        }
 
         $this->entityManager->persist($order);
         $this->entityManager->flush();
@@ -125,6 +140,7 @@ class OrderHWController extends AbstractController
 
     /**
      * @param string $id
+     * @param Request $request
      * @return JsonResponse
      * @throws Exception
      */

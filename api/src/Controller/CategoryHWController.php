@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CategoryHWController extends AbstractController
 {
@@ -22,11 +24,19 @@ class CategoryHWController extends AbstractController
     private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @var DenormalizerInterface
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    private DenormalizerInterface $denormalizer;
+
+    /**
+     * @var ValidatorInterface
+     */
+    private ValidatorInterface $validator;
+    public function __construct(EntityManagerInterface $entityManager,DenormalizerInterface $denormalizer, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
+        $this->denormalizer = $denormalizer;
+        $this->validator = $validator;
     }
 
     /**
@@ -50,6 +60,13 @@ class CategoryHWController extends AbstractController
         }
         $category = new CategoryHW();
         $category->setName($requestData['name'])->setImgName($requestData['imgName']);
+
+        $category = $this->denormalizer->denormalize($requestData, CategoryHW::class, "array");
+        $errors = $this->validator->validate($category);
+        if(count($errors)>0){
+            throw new Exception((string)$errors);
+        }
+
         $this->entityManager->persist($category);
         $this->entityManager->flush();
 
@@ -92,8 +109,8 @@ class CategoryHWController extends AbstractController
 
     /**
      * @param string $id
+     * @param Request $request
      * @return JsonResponse
-     * @throws Exception
      */
     #[Route('/category-hw-update/{id}', name: 'category_hw_update', methods: ['PATCH'])]
     public function update(string $id, Request $request): JsonResponse

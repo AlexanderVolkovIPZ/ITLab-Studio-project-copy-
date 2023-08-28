@@ -11,7 +11,7 @@ use JsonSerializable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserHWRepository::class)]
 class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
@@ -24,6 +24,7 @@ class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonS
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Unique]
     private ?int $id = null;
 
     /**
@@ -36,12 +37,14 @@ class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonS
      * @var string[]
      */
     #[ORM\Column]
+    #[Assert\Type('array')]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Length(min: 4)]
     private ?string $password = null;
 
     /**

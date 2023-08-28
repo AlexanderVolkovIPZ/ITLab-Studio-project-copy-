@@ -6,6 +6,7 @@ use App\Repository\ContentOrderHWRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContentOrderHWRepository::class)]
 class ContentOrderHW implements JsonSerializable
@@ -16,12 +17,14 @@ class ContentOrderHW implements JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Positive]
     private ?int $id = null;
 
     /**
      * @var int|null
      */
     #[ORM\Column]
+    #[Assert\PositiveOrZero]
     private ?int $count = null;
 
     /**

@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ContentOrderHWController extends AbstractController
 {
@@ -26,11 +28,25 @@ class ContentOrderHWController extends AbstractController
     private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @var DenormalizerInterface
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    private DenormalizerInterface $denormalizer;
+
+    /**
+     * @var ValidatorInterface
+     */
+    private ValidatorInterface $validator;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param DenormalizerInterface $denormalizer
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(EntityManagerInterface $entityManager, DenormalizerInterface $denormalizer, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
+        $this->denormalizer = $denormalizer;
+        $this->validator = $validator;
     }
 
     /**
@@ -138,6 +154,7 @@ class ContentOrderHWController extends AbstractController
 
     /**
      * @param string $id
+     * @param Request $request
      * @return JsonResponse
      * @throws Exception
      */

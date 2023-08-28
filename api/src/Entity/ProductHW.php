@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
 class ProductHW implements JsonSerializable
@@ -20,42 +21,49 @@ class ProductHW implements JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Unique]
     private ?int $id = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min: 3)]
     private ?string $name = null;
 
     /**
      * @var int|null
      */
     #[ORM\Column]
+    #[Assert\PositiveOrZero]
     private ?int $count = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
+    #[Assert\NotBlank]
     private ?string $price = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(min: 5)]
     private ?string $imgName = null;
 
     /**
      * @var CategoryHW|null
      */
     #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
+    #[Assert\NotBlank]
     private ?CategoryHW $category = null;
 
     /**
      * @var Collection|ArrayCollection|null
      */
     #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
+    #[Assert\NotBlank]
     private ?Collection $contentOrder;
 
     /**
