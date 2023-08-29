@@ -14,18 +14,33 @@ use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
-#[Constraint]
-#[ApiResource(collectionOperations: [
-    "get"=>[
-        "method"=>"GET",
-        "security"=>"is_granted ('".UserHW::ROLE_USER."')"
-    ]
-], itemOperations: [
-    "get"=>[
-        "method"=>"GET"
-    ]
-],attributes: [
-    "security"=>"is_granted ('".UserHW::ROLE_ADMIN."') or is_granted ('".UserHW::ROLE_USER."')"
+//#[Constraint]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            "method" => "GET",
+            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
+        ],
+        "POST" => [
+            "method" => "POST",
+            "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')"
+        ]
+    ],
+    itemOperations: [
+        "get" => [
+            "method" => "GET",
+            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
+        ],
+        "put" => [
+            'method' => 'PUT',
+            'security' => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
+        ],
+        "delete" => [
+            'method' => 'DELETE',
+            'security' => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
+        ],
+    ], attributes: [
+    "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
 ]
 )]
 class ProductHW implements JsonSerializable
@@ -67,19 +82,13 @@ class ProductHW implements JsonSerializable
 //    #[Assert\Length(min: 5)]
     private ?string $imgName = null;
 
-    /**
-     * @var CategoryHW|null
-     */
-    #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
-//    #[Assert\NotBlank]
-    private ?CategoryHW $category = null;
+/*    #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
+    #[Assert\NotBlank]
+    private ?CategoryHW $category = null;*/
 
-    /**
-     * @var Collection|ArrayCollection|null
-     */
-    #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
-//    #[Assert\NotBlank]
-    private ?Collection $contentOrder;
+/*    #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
+    #[Assert\NotBlank]
+    private ?Collection $contentOrder;*/
 
     /**
      * ProductHW constructor
@@ -173,43 +182,29 @@ class ProductHW implements JsonSerializable
         return $this;
     }
 
-    /**
-     * @return CategoryHW|null
-     */
-    public function getCategory(): ?CategoryHW
+/*    public function getCategory(): ?CategoryHW
     {
         return $this->category;
     }
 
-    /**
-     * @param CategoryHW|null $category
-     * @return $this
-     */
     public function setCategory(?CategoryHW $category): self
     {
         $this->category = $category;
 
         return $this;
-    }
+    }*/
 
-    /**
-     * @return Collection|null
-     */
-    public function getContentOrder(): ?Collection
+/*    public function getContentOrder(): ?Collection
     {
         return $this->contentOrder;
     }
 
-    /**
-     * @param Collection|null $contentOrder
-     * @return $this
-     */
     public function setContentOrder(?Collection $contentOrder): self
     {
         $this->contentOrder = $contentOrder;
 
         return $this;
-    }
+    }*/
 
     /**
      * @return array

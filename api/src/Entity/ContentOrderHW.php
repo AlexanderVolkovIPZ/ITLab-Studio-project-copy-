@@ -29,11 +29,8 @@ class ContentOrderHW implements JsonSerializable
 //    #[Assert\PositiveOrZero]
     private ?int $count = null;
 
-    /**
-     * @var ProductHW|null
-     */
-    #[ManyToOne(targetEntity: ProductHW::class, inversedBy: "contentOrder")]
-    private ?ProductHW $product = null;
+/*    #[ManyToOne(targetEntity: ProductHW::class, inversedBy: "contentOrder")]
+    private ?ProductHW $product = null;*/
 
     /**
      * @var OrderHW|null
@@ -68,24 +65,17 @@ class ContentOrderHW implements JsonSerializable
         return $this;
     }
 
-    /**
-     * @return ProductHW|null
-     */
-    public function getProduct(): ?ProductHW
+/*    public function getProduct(): ?ProductHW
     {
         return $this->product;
     }
 
-    /**
-     * @param ProductHW|null $product
-     * @return $this
-     */
     public function setProduct(?ProductHW $product): self
     {
         $this->product = $product;
 
         return $this;
-    }
+    }*/
 
     /**
      * @return OrderHW|null

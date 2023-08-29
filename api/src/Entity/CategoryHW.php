@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CategoryHWRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +13,34 @@ use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryHWRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            "method" => "GET",
+            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
+        ],
+        "POST" => [
+            "method" => "POST",
+            "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')"
+        ]
+    ],
+    itemOperations: [
+        "get" => [
+            "method" => "GET",
+            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
+        ],
+        "put" => [
+            'method' => 'PUT',
+            'security' => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
+        ],
+        "delete" => [
+            'method' => 'DELETE',
+            'security' => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
+        ],
+    ], attributes: [
+    "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
+]
+)]
 class CategoryHW implements JsonSerializable
 {
     /**
@@ -36,7 +65,6 @@ class CategoryHW implements JsonSerializable
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(min: 5)]
     private ?string $imgName = null;
-
 
     /**
      * CategoryHW constructor
