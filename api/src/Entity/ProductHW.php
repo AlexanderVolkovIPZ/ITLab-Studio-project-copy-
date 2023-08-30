@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductHWRepository;
+use App\Validator\Constraints\ProductCountPositive;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -14,14 +15,13 @@ use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
-//#[Constraint]
+#[ProductCountPositive]
 #[ApiResource(
     collectionOperations: [
         "get" => [
             "method" => "GET",
-            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
         ],
-        "POST" => [
+        "post" => [
             "method" => "POST",
             "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')"
         ]
@@ -29,7 +29,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     itemOperations: [
         "get" => [
             "method" => "GET",
-            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
         ],
         "put" => [
             'method' => 'PUT',
@@ -39,9 +38,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             'method' => 'DELETE',
             'security' => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
         ],
-    ], attributes: [
-    "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
-]
+    ],
+    attributes: [
+        "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
+    ]
 )]
 class ProductHW implements JsonSerializable
 {
@@ -75,16 +75,15 @@ class ProductHW implements JsonSerializable
      * @var string|null
      */
     #[ORM\Column(length: 255, nullable: true)]
-//    #[Assert\Length(min: 5)]
     private ?string $imgName = null;
 
-/*    #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
-    #[Assert\NotBlank]
-    private ?CategoryHW $category = null;*/
+    /*    #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
+        #[Assert\NotBlank]
+        private ?CategoryHW $category = null;*/
 
-/*    #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
-    #[Assert\NotBlank]
-    private ?Collection $contentOrder;*/
+    /*    #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
+        #[Assert\NotBlank]
+        private ?Collection $contentOrder;*/
 
     /**
      * ProductHW constructor
@@ -178,29 +177,29 @@ class ProductHW implements JsonSerializable
         return $this;
     }
 
-/*    public function getCategory(): ?CategoryHW
-    {
-        return $this->category;
-    }
+    /*    public function getCategory(): ?CategoryHW
+        {
+            return $this->category;
+        }
 
-    public function setCategory(?CategoryHW $category): self
-    {
-        $this->category = $category;
+        public function setCategory(?CategoryHW $category): self
+        {
+            $this->category = $category;
 
-        return $this;
-    }*/
+            return $this;
+        }*/
 
-/*    public function getContentOrder(): ?Collection
-    {
-        return $this->contentOrder;
-    }
+    /*    public function getContentOrder(): ?Collection
+        {
+            return $this->contentOrder;
+        }
 
-    public function setContentOrder(?Collection $contentOrder): self
-    {
-        $this->contentOrder = $contentOrder;
+        public function setContentOrder(?Collection $contentOrder): self
+        {
+            $this->contentOrder = $contentOrder;
 
-        return $this;
-    }*/
+            return $this;
+        }*/
 
     /**
      * @return array
@@ -213,7 +212,7 @@ class ProductHW implements JsonSerializable
             "count" => $this->getCount(),
             "price" => $this->getPrice(),
             "imgName" => $this->imgName,
-            "category" => $this->getCategory(),
+/*            "category" => $this->getCategory(),*/
         ];
     }
 }

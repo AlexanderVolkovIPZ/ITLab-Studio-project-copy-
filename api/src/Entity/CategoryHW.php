@@ -19,7 +19,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     collectionOperations: [
         "get" => [
             "method" => "GET",
-            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
         ],
         "POST" => [
             "method" => "POST",
@@ -29,7 +28,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     itemOperations: [
         "get" => [
             "method" => "GET",
-            "security" => "is_granted ('" . UserHW::ROLE_USER . "') or is_granted ('" . UserHW::ROLE_ADMIN . "')"
         ],
         "put" => [
             'method' => 'PUT',
@@ -39,9 +37,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             'method' => 'DELETE',
             'security' => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
         ],
-    ], attributes: [
-    "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
-]
+    ],
+    attributes: [
+        "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
+    ]
 )]
 class CategoryHW implements JsonSerializable
 {
