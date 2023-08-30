@@ -14,6 +14,8 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class ProductCountPositiveValidator extends ConstraintValidator
 {
+    private const NUMBER = 0;
+
     /**
      * ProductCountPositiveValidator constructor
      */
@@ -36,7 +38,8 @@ class ProductCountPositiveValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, ProductHW::class);
         }
 
-        if ($value->getCount() < 0) {
+        if()
+        if ($value->getCount() < self::NUMBER) {
             $this->context->addViolation("Error! Count of product can't be less than 0!");
         }
     }
