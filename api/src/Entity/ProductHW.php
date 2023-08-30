@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductHWRepository;
 use App\Validator\Constraints\ProductCountPositive;
@@ -11,24 +12,30 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
-use JsonSerializable;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
 #[ProductCountPositive]
 #[ApiResource(
     collectionOperations: [
         "get" => [
             "method" => "GET",
+            "normalization_context" => ["groups" => ["get:collection:product"]]
         ],
         "post" => [
             "method" => "POST",
-            "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')"
+            "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
+            "denormalization_context" => ["groups" => ["post:collection:product"]],
+            "normalization_context" => ["groups" => ["get:collection:product"]]
+
         ]
     ],
     itemOperations: [
         "get" => [
             "method" => "GET",
+            "normalization_context" => ["groups" => ["get:item:product"]]
         ],
         "put" => [
             'method' => 'PUT',
@@ -43,7 +50,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
     ]
 )]
-class ProductHW implements JsonSerializable
+#[ApiFilter(SearchFilter::class, properties: [
+    "name"=>"partial", "price"
+])]
+#[ApiFilter(RangeFilter::class, properties: ['price'])]
+class ProductHW
 {
     /**
      * @var int|null
@@ -51,47 +62,48 @@ class ProductHW implements JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["get:item:product"])]
     private ?int $id = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255)]
+    #[Groups([
+        "get:collection:product",
+        "get:item:product",
+        "post:collection:product"
+    ])]
     private ?string $name = null;
 
     /**
      * @var int|null
      */
     #[ORM\Column]
+    #[Groups(["get:item:product", "post:collection:product"])]
     private ?int $count = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
+    #[Groups(["get:item:product",
+        "post:collection:product"
+    ])]
     private ?string $price = null;
 
     /**
      * @var string|null
      */
+    #[Groups(["get:item:product",
+        "post:collection:product"])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imgName = null;
 
-    /*    #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
-        #[Assert\NotBlank]
-        private ?CategoryHW $category = null;*/
-
-    /*    #[OneToMany(mappedBy: 'product', targetEntity: ContentOrderHW::class)]
-        #[Assert\NotBlank]
-        private ?Collection $contentOrder;*/
-
-    /**
-     * ProductHW constructor
-     */
-    public function __construct()
-    {
-        $this->contentOrder = new ArrayCollection();
-    }
+    #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
+    #[Groups(["get:item:product",
+        "post:collection:product"])]
+    private ?CategoryHW $category = null;
 
     /**
      * @return int|null
@@ -177,18 +189,24 @@ class ProductHW implements JsonSerializable
         return $this;
     }
 
-    /*    public function getCategory(): ?CategoryHW
-        {
-            return $this->category;
-        }
+    /**
+     * @return CategoryHW|null
+     */
+    public function getCategory(): ?CategoryHW
+    {
+        return $this->category;
+    }
 
-        public function setCategory(?CategoryHW $category): self
-        {
-            $this->category = $category;
+    /**
+     * @param CategoryHW|null $category
+     * @return $this
+     */
+    public function setCategory(?CategoryHW $category): self
+    {
+        $this->category = $category;
 
-            return $this;
-        }*/
-
+        return $this;
+    }
     /*    public function getContentOrder(): ?Collection
         {
             return $this->contentOrder;
@@ -201,18 +219,14 @@ class ProductHW implements JsonSerializable
             return $this;
         }*/
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): array
-    {
-        return [
-            "id" => $this->getId(),
-            "name" => $this->getName(),
-            "count" => $this->getCount(),
-            "price" => $this->getPrice(),
-            "imgName" => $this->imgName,
-/*            "category" => $this->getCategory(),*/
-        ];
-    }
+    /*    public function jsonSerialize(): array
+        {
+            return [
+                "id" => $this->getId(),
+                "name" => $this->getName(),
+                "count" => $this->getCount(),
+                "price" => $this->getPrice(),
+                "imgName" => $this->imgName,
+            ];
+        }*/
 }

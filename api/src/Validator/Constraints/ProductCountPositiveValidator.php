@@ -38,7 +38,6 @@ class ProductCountPositiveValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, ProductHW::class);
         }
 
-        if()
         if ($value->getCount() < self::NUMBER) {
             $this->context->addViolation("Error! Count of product can't be less than 0!");
         }

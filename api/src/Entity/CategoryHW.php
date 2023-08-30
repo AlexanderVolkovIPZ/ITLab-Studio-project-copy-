@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
-use JsonSerializable;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryHWRepository::class)]
@@ -42,7 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "') or is_granted ('" . UserHW::ROLE_USER . "')"
     ]
 )]
-class CategoryHW implements JsonSerializable
+class CategoryHW
 {
     /**
      * @var int|null
@@ -50,25 +50,35 @@ class CategoryHW implements JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["get:item:product"])]
     private ?int $id = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255)]
+    #[Groups(["get:item:product"])]
     private ?string $name = null;
 
     /**
      * @var string|null
      */
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["get:item:product"])]
     private ?string $imgName = null;
+
+    /**
+     * @var Collection|ArrayCollection|null
+     */
+    #[OneToMany(mappedBy: 'category', targetEntity: ProductHW::class)]
+    private ?Collection $products;
 
     /**
      * CategoryHW constructor
      */
     public function __construct()
     {
+        $this->products = new ArrayCollection();
     }
 
     /**
@@ -118,14 +128,20 @@ class CategoryHW implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Collection|null
      */
-    public function jsonSerialize(): array
+    public function getProducts(): ?Collection
     {
-        return [
-            "id" => $this->getId(),
-            "name" => $this->getName(),
-            "imgName" => $this->getImgName()
-        ];
+        return $this->products;
+    }
+
+    /**
+     * @param Collection|null $products
+     * @return $this
+     */
+    public function setProducts(?Collection $products): self
+    {
+        $this->products = $products;
+        return $this;
     }
 }

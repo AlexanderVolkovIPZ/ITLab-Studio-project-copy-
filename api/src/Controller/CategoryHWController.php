@@ -172,3 +172,4 @@ class CategoryHWController extends AbstractController
         return new JsonResponse($category, Response::HTTP_NO_CONTENT);
     }
 }
+

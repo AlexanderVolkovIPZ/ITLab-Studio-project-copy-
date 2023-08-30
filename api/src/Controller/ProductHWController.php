@@ -46,48 +46,48 @@ class ProductHWController extends AbstractController
         $this->validator = $validator;
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    #[Route('/product-hw-create', name: 'product_hw_create', methods: ["POST"])]
-    public function create(Request $request): JsonResponse
-    {
-        $user = $this->getUser();
-
-        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
-            throw new AccessDeniedException("Access denied!");
-        }
-        $requestData = json_decode($request->getContent(), true);
-
-        if (!isset($requestData['name'], $requestData['count'], $requestData['price'], $requestData['imgName'], $requestData['category'])) {
-            throw new Exception("Invalid request data!");
-        }
-        $category = $this->entityManager->getRepository(CategoryHW::class)->find($requestData["category"]);
-
-        if (!$category) {
-            throw new Exception("Category with id " . $requestData['category'] . " not found");
-        }
-
-        $product = $this->denormalizer->denormalize($requestData, ProductHW::class, "array");
-        $errors = $this->validator->validate($product);
-
-        if (count($errors) > 0) {
-            throw new Exception((string)$errors);
-        }
-
-        $product->setName($requestData['name'])
-            ->setCount($requestData['count'])
-            ->setPrice($requestData['price'])
-            ->setImgName($requestData['imgName'])
-            ->setCategory($category);
-
-        $this->entityManager->persist($product);
-        $this->entityManager->flush();
-
-        return new JsonResponse($product->jsonSerialize(), Response::HTTP_CREATED);
-    }
+//    /**
+//     * @param Request $request
+//     * @return JsonResponse
+//     * @throws Exception
+//     */
+//    #[Route('/product-hw-create', name: 'product_hw_create', methods: ["POST"])]
+//    public function create(Request $request): JsonResponse
+//    {
+//        $user = $this->getUser();
+//
+//        if (!in_array(UserHW::ROLE_ADMIN, $user->getRoles())) {
+//            throw new AccessDeniedException("Access denied!");
+//        }
+//        $requestData = json_decode($request->getContent(), true);
+//
+//        if (!isset($requestData['name'], $requestData['count'], $requestData['price'], $requestData['imgName'], $requestData['category'])) {
+//            throw new Exception("Invalid request data!");
+//        }
+//        $category = $this->entityManager->getRepository(CategoryHW::class)->find($requestData["category"]);
+//
+//        if (!$category) {
+//            throw new Exception("Category with id " . $requestData['category'] . " not found");
+//        }
+//
+//        $product = $this->denormalizer->denormalize($requestData, ProductHW::class, "array");
+//        $errors = $this->validator->validate($product);
+//
+//        if (count($errors) > 0) {
+//            throw new Exception((string)$errors);
+//        }
+//
+//        $product->setName($requestData['name'])
+//            ->setCount($requestData['count'])
+//            ->setPrice($requestData['price'])
+//            ->setImgName($requestData['imgName'])
+//            ->setCategory($category);
+//
+//        $this->entityManager->persist($product);
+//        $this->entityManager->flush();
+//
+//        return new JsonResponse($product->jsonSerialize(), Response::HTTP_CREATED);
+//    }
 
     /**
      * @param Request $request
