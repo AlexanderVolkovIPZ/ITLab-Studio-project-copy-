@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Action\CreateProductAction;
+use App\EntityListener\ProductEntityListener;
 use App\Repository\ProductHWRepository;
 use App\Validator\Constraints\ProductCountPositive;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,7 +30,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             "method" => "POST",
             "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
             "denormalization_context" => ["groups" => ["post:collection:product"]],
-            "normalization_context" => ["groups" => ["get:collection:product"]]
+            "normalization_context" => ["groups" => ["get:collection:product"]],
+            "controller"=>CreateProductAction::class,
 
         ]
     ],
@@ -51,9 +54,10 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: [
-    "name"=>"partial", "price"
+    "name"=>"partial"
 ])]
 #[ApiFilter(RangeFilter::class, properties: ['price'])]
+#[ORM\EntityListeners([ProductEntityListener::class])]
 class ProductHW
 {
     /**

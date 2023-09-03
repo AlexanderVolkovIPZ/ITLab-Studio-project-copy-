@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         "get" => [
             "method" => "GET",
         ],
-        "POST" => [
+        "post" => [
             "method" => "POST",
             "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')"
         ]
