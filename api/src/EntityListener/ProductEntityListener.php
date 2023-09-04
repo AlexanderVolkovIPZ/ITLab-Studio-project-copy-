@@ -14,7 +14,8 @@ class ProductEntityListener
      * @param LifecycleEventArgs $eventArgs
      * @return void
      */
-    public function prePersist(ProductHW $productHW, LifecycleEventArgs $eventArgs){
+    public function prePersist(ProductHW $productHW, LifecycleEventArgs $eventArgs): void
+    {
         $productHW->setName($productHW->getName()."New");
     }
 
@@ -23,7 +24,8 @@ class ProductEntityListener
      * @param PostPersistEventArgs $persistEventArgs
      * @return void
      */
-    public function postPersist(ProductHW $productHW, PostPersistEventArgs $persistEventArgs){
+    public function postPersist(ProductHW $productHW, PostPersistEventArgs $persistEventArgs): void
+    {
 
         $test = $persistEventArgs->getObjectManager()->getUnitOfWork()->getEntityChangeSet($productHW);
     }
@@ -33,7 +35,8 @@ class ProductEntityListener
      * @param LifecycleEventArgs $eventArgs
      * @return void
      */
-    public function preUpdate(ProductHW $productHW, LifecycleEventArgs $eventArgs){
+    public function preUpdate(ProductHW $productHW, LifecycleEventArgs $eventArgs): void
+    {
         $test = 1;
     }
 
@@ -42,7 +45,8 @@ class ProductEntityListener
      * @param LifecycleEventArgs $eventArgs
      * @return void
      */
-    public function postUpdate(ProductHW $productHW, LifecycleEventArgs $eventArgs){
+    public function postUpdate(ProductHW $productHW, LifecycleEventArgs $eventArgs): void
+    {
         $test = 1;
     }
 }

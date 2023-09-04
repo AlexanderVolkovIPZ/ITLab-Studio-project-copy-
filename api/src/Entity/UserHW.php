@@ -55,12 +55,20 @@ class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonS
     private ?Collection $order;
 
     /**
+     * @var Collection|ArrayCollection|null
+     */
+    #[OneToMany(mappedBy: 'user', targetEntity: ProductHW::class)]
+    private ?Collection $products;
+
+    /**
      * User constructor
      */
     public function __construct()
     {
         $this->roles = [self::ROLE_USER];
         $this->order = new ArrayCollection();
+        $this->products = new ArrayCollection();
+
     }
 
     /**
@@ -195,5 +203,15 @@ class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonS
             'username'=>$this->getUsername(),
             "roles"=>$this->getRoles()
         ];
+    }
+
+    public function getProducts(): ?Collection
+    {
+        return $this->products;
+    }
+
+    public function setProducts(?Collection $products): void
+    {
+        $this->products = $products;
     }
 }

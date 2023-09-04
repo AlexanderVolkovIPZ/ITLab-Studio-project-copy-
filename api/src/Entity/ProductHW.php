@@ -18,6 +18,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use App\Entity\UserHW;
+
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
 #[ProductCountPositive]
 #[ApiResource(
@@ -108,6 +110,9 @@ class ProductHW
     #[Groups(["get:item:product",
         "post:collection:product"])]
     private ?CategoryHW $category = null;
+
+    #[ManyToOne(targetEntity: UserHw::class, inversedBy: "products")]
+    private ?UserHW $user = null;
 
     /**
      * @return int|null
@@ -233,4 +238,13 @@ class ProductHW
                 "imgName" => $this->imgName,
             ];
         }*/
+    public function getUser(): ?UserHW
+    {
+        return $this->user;
+    }
+
+    public function setUser(?UserHW $user): void
+    {
+        $this->user = $user;
+    }
 }
