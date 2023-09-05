@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Counter from "./components/Counter";
+import {BrowserRouter} from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Navigation from "./components/Navigation";
 
 
 let headerContent = {
@@ -26,9 +30,11 @@ const values = {
 }
 root.render(
     <React.StrictMode>
-        {
-            <Counter min = {values.min} max = {values.max} value={values.currentValue} color="green"/>
-        }
+        <BrowserRouter>
+            <Header content={headerContent}/>
+            <Navigation/>
+            <Footer/>
+        </BrowserRouter>
     </React.StrictMode>
 );
 reportWebVitals();

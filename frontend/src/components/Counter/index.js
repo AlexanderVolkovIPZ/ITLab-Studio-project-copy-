@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import styled, {css} from "styled-components";
 import PropTypes from "prop-types";
 
@@ -40,7 +40,12 @@ let ContentWrapper = styled.div`
 
 function Counter({value = 20, padding = 20, color = "green", min = -100, max = 100}) {
     const [currentValue, setCurrentValue] = useState(value || 0)
-
+    useEffect(() => {
+        console.log("Mount ")
+        return ()=>{
+            console.log("Unmounted")
+        };
+    }, []);
     const updateStyle = () => {
         const style = window.getComputedStyle(document.getElementById("value"));
         if (style.color === "red") {
