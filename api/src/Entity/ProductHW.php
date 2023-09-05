@@ -26,7 +26,9 @@ use App\Entity\UserHW;
     collectionOperations: [
         "get" => [
             "method" => "GET",
-            "normalization_context" => ["groups" => ["get:collection:product"]]
+            "normalization_context" => ["groups" => ["get:collection:product"]],
+            "path"=>"products"
+
         ],
         "post" => [
             "method" => "POST",
