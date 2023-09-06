@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Action\CreateProductAction;
 use App\EntityListener\ProductEntityListener;
 use App\Repository\ProductHWRepository;
@@ -16,10 +18,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use App\Entity\UserHW;
 
+use App\Entity\UserHW;
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
 #[ProductCountPositive]
 #[ApiResource(
@@ -28,7 +28,6 @@ use App\Entity\UserHW;
             "method" => "GET",
             "normalization_context" => ["groups" => ["get:collection:product"]],
             "path"=>"products"
-
         ],
         "post" => [
             "method" => "POST",
@@ -88,7 +87,7 @@ class ProductHW
      * @var int|null
      */
     #[ORM\Column]
-    #[Groups(["get:item:product", "post:collection:product"])]
+    #[Groups(["get:item:product", "post:collection:product", "get:collection:product",])]
     private ?int $count = null;
 
     /**
@@ -96,7 +95,8 @@ class ProductHW
      */
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
     #[Groups(["get:item:product",
-        "post:collection:product"
+        "post:collection:product",
+        "get:collection:product"
     ])]
     private ?string $price = null;
 
