@@ -6,7 +6,6 @@ import Counter from "./components/Counter";
 import {BrowserRouter} from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Navigation from "./components/Navigation";
 
 
 let headerContent = {
@@ -31,7 +30,6 @@ const values = {
 root.render(
     <React.StrictMode>
             <Header content={headerContent}/>
-            <Navigation/>
             <Footer/>
     </React.StrictMode>
 );

@@ -1,6 +1,21 @@
 import React from "react";
 import {createBrowserRouter, Link, Outlet, RouterProvider} from
         "react-router-dom";
+import Counter from "../Counter";
+import Home from "../Home";
+
+let headerContent = {
+    "companyName": "Новини України",
+    "home": "Додому",
+    "aboutCompany": "Про компанію",
+    "price": "Ціни",
+    "another": "Інше",
+    "anotherContent": {
+        "aboutUs": "Про нас",
+        "ourHistory": "Наша історія",
+        "charity": "Благодійність",
+    }
+};
 
 let router = createBrowserRouter(
     [
@@ -10,7 +25,7 @@ let router = createBrowserRouter(
                     <nav className="navbar navbar-expand-lg bg-body-tertiary">
                         <div className="container-fluid">
 
-                            <a className="navbar-brand" href="#">{props.content.companyName}</a>
+                            {/* <a className="navbar-brand" href="#">{props.content.companyName}</a>*/}
                             <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                                     aria-expanded="false" aria-label="Toggle navigation">
@@ -19,37 +34,31 @@ let router = createBrowserRouter(
                             <div className="collapse navbar-collapse" id="navbarNavDropdown">
                                 <ul className="navbar-nav">
                                     <li className="nav-item">
-                                        <Link to="/">{props.content.home}</Link>
-                                        {/*<a className="nav-link active" aria-current="page" href="#">{props.content.home}</a>*/}
+                                        <Link className="nav-link active" aria-current="page"
+                                              to="/">{headerContent.home}</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link to="/about">{props.content.aboutCompany}</Link>
-                                        {/*<a className="nav-link" href="#">{props.content.aboutCompany}</a>*/}
+                                        <Link className="nav-link" to="/about">{headerContent.aboutCompany}</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link to="/price">{props.content.price}</Link>
-                                        {/*<a className="nav-link" href="#">{props.content.price}</a>*/}
+                                        <Link className="nav-link" to="/price">{headerContent.price}</Link>
                                     </li>
                                     <li className="nav-item dropdown">
-                                        <Link to="/another">{props.content.another}</Link>
-                                        {/*<a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">*/}
-                                        {/*    {props.content.another}*/}
-                                        {/*</a>*/}
+                                        <Link className="nav-link dropdown-toggle" to="#" role="button"
+                                              data-bs-toggle="dropdown"
+                                              aria-expanded="false">{headerContent.another}</Link>
                                         <ul className="dropdown-menu">
                                             <li>
                                                 <Link className="dropdown-item"
-                                                      to="/about-us">{props.content.anotherContent.aboutUs}</Link>
-                                                {/*<a className="dropdown-item" href="#">{props.content.anotherContent.aboutUs}</a>*/}
+                                                      to="/about-us">{headerContent.anotherContent.aboutUs}</Link>
                                             </li>
                                             <li>
                                                 <Link className="dropdown-item"
-                                                      to="/history">{props.content.anotherContent.ourHistory}</Link>
-                                                {/*<a className="dropdown-item" href="#">{props.content.anotherContent.ourHistory}</a>*/}
+                                                      to="/history">{headerContent.anotherContent.ourHistory}</Link>
                                             </li>
                                             <li>
                                                 <Link className="dropdown-item"
-                                                      to="/charity">{props.content.anotherContent.charity}</Link>
-                                                {/*<a className="dropdown-item" href="#">{props.content.anotherContent.charity}</a>*/}
+                                                      to="/charity">{headerContent.anotherContent.charity}</Link>
                                             </li>
                                         </ul>
                                     </li>
@@ -62,16 +71,19 @@ let router = createBrowserRouter(
             </>,
             children:
                 [
-                    {index: true, element: <><h1>Home</h1><p>Content</p></>},
-                    {path: "about", element: <About/>},
-                    {path: "contacts", element: <Contacts/>},
-                    {path: "*", element: <NoMatch/>}
+                    {index: true, element: <Home/>},
+                    {path: "about", element: <Counter/>},
+                    {path: "price", element: <Counter/>},
+                    {path: "another", element: <Counter/>},
+                    {path: "*", element: <Counter/>}
                 ]
 
         }
     ]
 )
-
+export default function Header() {
+    return (<RouterProvider router={router}/>)
+}
 
 // function Header(props){
 //     return <div className="container">
