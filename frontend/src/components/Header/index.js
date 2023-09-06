@@ -3,6 +3,7 @@ import {createBrowserRouter, Link, Outlet, RouterProvider} from
         "react-router-dom";
 import Counter from "../Counter";
 import Home from "../Home";
+import Price from "../Price";
 
 let headerContent = {
     "companyName": "Новини України",
@@ -72,8 +73,8 @@ let router = createBrowserRouter(
             children:
                 [
                     {index: true, element: <Home/>},
-                    {path: "about", element: <Counter/>},
-                    {path: "price", element: <Counter/>},
+                    {path: "about", element: <Counter min={0} max={10} value={1}/>},
+                    {path: "price", element: <Price/>},
                     {path: "another", element: <Counter/>},
                     {path: "*", element: <Counter/>}
                 ]
