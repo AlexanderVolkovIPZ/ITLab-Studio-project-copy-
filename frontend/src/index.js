@@ -30,11 +30,9 @@ const values = {
 }
 root.render(
     <React.StrictMode>
-        <BrowserRouter>
             <Header content={headerContent}/>
             <Navigation/>
             <Footer/>
-        </BrowserRouter>
     </React.StrictMode>
 );
 reportWebVitals();
