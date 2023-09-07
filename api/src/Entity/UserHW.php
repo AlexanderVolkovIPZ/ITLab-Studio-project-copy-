@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserHWRepository::class)]
+#[ApiResource]
 class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     public const ROLE_USER = "ROLE_USER";
