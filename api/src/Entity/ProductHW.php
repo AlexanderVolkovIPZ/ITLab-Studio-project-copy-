@@ -38,7 +38,7 @@ use App\Entity\UserHW;
             "denormalization_context" => ["groups" => ["post:collection:product"]],
             "normalization_context" => ["groups" => ["get:collection:product"]],
             "controller" => CreateProductAction::class,
-
+            "path" => "product-create"
         ]
     ],
     itemOperations: [

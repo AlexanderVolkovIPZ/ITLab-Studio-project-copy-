@@ -2,17 +2,17 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {responseStatus} from "../../../utils/consts";
 import {Helmet} from "react-helmet-async";
-import {Breadcrumbs, Link, Pagination, Typography} from "@mui/material";
+import {Box, Breadcrumbs, Button, FormControl, Link, Pagination, TextField, Typography} from "@mui/material";
 import {NavLink, useNavigate, useSearchParams} from "react-router-dom";
 import GoodsList from "./GoodsList";
 import {checkFilterItem, fetchFilterData} from "../../../utils/fetchFilterData";
 import GoodsFilter from "./GoodsFilter";
+import GoodsCreateForm from "./GoodsCreateForm";
 
 const GoodsContainer = () => {
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-
     const [goods, setGoods] = useState(null);
 
     const [paginationInfo, setPaginationInfo] = useState({
@@ -57,7 +57,6 @@ const GoodsContainer = () => {
         fetchProducts();
     }, [filterData]);
 
-    console.log(paginationInfo)
     return (
         <>
             <Helmet>
@@ -75,6 +74,9 @@ const GoodsContainer = () => {
                 Goods
             </Typography>
             <GoodsFilter filterData={filterData} setFilterData={setFilterData}/>
+            <GoodsCreateForm/>
+
+
             <GoodsList goods={goods}/>
             {paginationInfo.totalPageCount &&
                 <Pagination

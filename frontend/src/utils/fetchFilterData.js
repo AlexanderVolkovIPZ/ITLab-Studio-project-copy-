@@ -22,6 +22,5 @@ export const fetchFilterData = (data) => {
 
 export const checkFilterItem = (searchParams, item, defaultValue, isNumber = false, isConstant = false) => {
     let filterItems = queryString.parse(searchParams.toString());
-
     return filterItems[item] !== undefined && !isConstant ? (isNumber ? parseInt(filterItems[item]) : filterItems[item]) : defaultValue;
 };
