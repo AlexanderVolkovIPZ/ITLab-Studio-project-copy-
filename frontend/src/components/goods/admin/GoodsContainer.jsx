@@ -23,7 +23,11 @@ const GoodsContainer = () => {
 
     const [filterData, setFilterData] = useState({
         "page": checkFilterItem(searchParams, "page", 1, true),
-        "name": checkFilterItem(searchParams, "name", null)
+        "name": checkFilterItem(searchParams, "name", null),
+        "price[gt]":checkFilterItem(searchParams, "price[gt]", 0, true),
+        "price[lt]":checkFilterItem(searchParams, "price[lt]", 10000, true),
+        // "count": checkFilterItem(searchParams, "count", 0),
+        // "maxCount": checkFilterItem(searchParams, "maxCount", 100000),
     });
 
     const fetchProducts = () => {
