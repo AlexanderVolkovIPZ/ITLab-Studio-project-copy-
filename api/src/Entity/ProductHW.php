@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Action\CreateProductAction;
@@ -18,6 +19,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use Symfony\Component\Finder\Iterator\DateRangeFilterIterator;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -63,6 +65,7 @@ use App\Entity\UserHW;
     "name" => "partial"
 ])]
 #[ApiFilter(RangeFilter::class, properties: ['price'])]
+#[ApiFilter(DateFilter::class, properties: ['date'])]
 #[ORM\EntityListeners([ProductEntityListener::class])]
 class ProductHW
 {

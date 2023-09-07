@@ -26,6 +26,8 @@ const GoodsContainer = () => {
         "name": checkFilterItem(searchParams, "name", null),
         "price[gt]":checkFilterItem(searchParams, "price[gt]", 0, true),
         "price[lt]":checkFilterItem(searchParams, "price[lt]", 10000, true),
+        "date[before]":checkFilterItem(searchParams, "date[before]", null),
+        "date[after]":checkFilterItem(searchParams, "date[after]", null),
         // "count": checkFilterItem(searchParams, "count", 0),
         // "maxCount": checkFilterItem(searchParams, "maxCount", 100000),
     });
