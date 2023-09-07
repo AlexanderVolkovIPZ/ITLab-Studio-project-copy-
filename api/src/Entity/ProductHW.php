@@ -10,6 +10,7 @@ use App\Action\CreateProductAction;
 use App\EntityListener\ProductEntityListener;
 use App\Repository\ProductHWRepository;
 use App\Validator\Constraints\ProductCountPositive;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,6 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Entity\UserHW;
+
 #[ORM\Entity(repositoryClass: ProductHWRepository::class)]
 #[ProductCountPositive]
 #[ApiResource(
@@ -28,14 +30,14 @@ use App\Entity\UserHW;
         "get" => [
             "method" => "GET",
             "normalization_context" => ["groups" => ["get:collection:product"]],
-            "path"=>"products"
+            "path" => "products"
         ],
         "post" => [
             "method" => "POST",
             "security" => "is_granted ('" . UserHW::ROLE_ADMIN . "')",
             "denormalization_context" => ["groups" => ["post:collection:product"]],
             "normalization_context" => ["groups" => ["get:collection:product"]],
-            "controller"=>CreateProductAction::class,
+            "controller" => CreateProductAction::class,
 
         ]
     ],
@@ -58,24 +60,19 @@ use App\Entity\UserHW;
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: [
-    "name"=>"partial"
+    "name" => "partial"
 ])]
 #[ApiFilter(RangeFilter::class, properties: ['price'])]
 #[ORM\EntityListeners([ProductEntityListener::class])]
 class ProductHW
 {
-    /**
-     * @var int|null
-     */
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(["get:item:product"])]
     private ?int $id = null;
 
-    /**
-     * @var string|null
-     */
     #[ORM\Column(length: 255)]
     #[Groups([
         "get:collection:product",
@@ -84,16 +81,10 @@ class ProductHW
     ])]
     private ?string $name = null;
 
-    /**
-     * @var int|null
-     */
     #[ORM\Column]
     #[Groups(["get:item:product", "post:collection:product", "get:collection:product",])]
     private ?int $count = null;
 
-    /**
-     * @var string|null
-     */
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
     #[Groups(["get:item:product",
         "post:collection:product",
@@ -101,13 +92,15 @@ class ProductHW
     ])]
     private ?string $price = null;
 
-    /**
-     * @var string|null
-     */
     #[Groups(["get:item:product",
         "post:collection:product"])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imgName = null;
+
+    #[ORM\Column(type: 'datetime')]
+    #[Groups(["get:item:product",
+        "post:collection:product"])]
+    private ?DateTime $date = null;
 
     #[ManyToOne(targetEntity: CategoryHW::class, inversedBy: "products")]
     #[Groups(["get:item:product",
@@ -115,28 +108,20 @@ class ProductHW
     private ?CategoryHW $category = null;
 
     #[ManyToOne(targetEntity: UserHw::class, inversedBy: "products")]
+    #[Groups(["get:item:product",
+        "post:collection:product"])]
     private ?UserHW $user = null;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return $this
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -144,18 +129,11 @@ class ProductHW
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getCount(): ?int
     {
         return $this->count;
     }
 
-    /**
-     * @param int $count
-     * @return $this
-     */
     public function setCount(int $count): self
     {
         $this->count = $count;
@@ -163,18 +141,11 @@ class ProductHW
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    /**
-     * @param string $price
-     * @return $this
-     */
     public function setPrice(string $price): self
     {
         $this->price = $price;
@@ -182,18 +153,11 @@ class ProductHW
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getImgName(): ?string
     {
         return $this->imgName;
     }
 
-    /**
-     * @param string|null $imgName
-     * @return $this
-     */
     public function setImgName(?string $imgName): self
     {
         $this->imgName = $imgName;
@@ -201,18 +165,11 @@ class ProductHW
         return $this;
     }
 
-    /**
-     * @return CategoryHW|null
-     */
     public function getCategory(): ?CategoryHW
     {
         return $this->category;
     }
 
-    /**
-     * @param CategoryHW|null $category
-     * @return $this
-     */
     public function setCategory(?CategoryHW $category): self
     {
         $this->category = $category;
@@ -241,13 +198,42 @@ class ProductHW
                 "imgName" => $this->imgName,
             ];
         }*/
+
     public function getUser(): ?UserHW
     {
         return $this->user;
     }
 
+
     public function setUser(?UserHW $user): void
     {
         $this->user = $user;
+    }
+
+ /*   public function getDate()
+    {
+        return $this->date;
+    }
+
+    public function setDate(?string $date): void
+    {
+        $newDate = new DateTime($date);
+        $this->date = $newDate->getTimestamp();
+    }*/
+
+    public function getDate(): ?DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param DateTimeInterface $date
+     * @return $this
+     * @throws \Exception
+     */
+    public function setDate(DateTimeInterface $date): self
+    {
+        $this->date = new DateTime($date->format("Y-m-d H:i:s"));
+        return $this;
     }
 }
