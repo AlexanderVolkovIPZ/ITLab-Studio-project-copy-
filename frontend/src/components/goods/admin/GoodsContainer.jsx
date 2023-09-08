@@ -28,8 +28,6 @@ const GoodsContainer = () => {
         "price[lt]":checkFilterItem(searchParams, "price[lt]", 10000, true),
         "date[before]":checkFilterItem(searchParams, "date[before]", null),
         "date[after]":checkFilterItem(searchParams, "date[after]", null),
-        // "count": checkFilterItem(searchParams, "count", 0),
-        // "maxCount": checkFilterItem(searchParams, "maxCount", 100000),
     });
 
     const fetchProducts = () => {
@@ -48,7 +46,6 @@ const GoodsContainer = () => {
                 setPaginationInfo({...paginationInfo,
                     totalItems: response.data["hydra:totalItems"],
                     totalPageCount: Math.ceil(response.data["hydra:totalItems"]/paginationInfo.itemsPerPage)
-
                 })
             }
         }).catch(error => {
@@ -81,7 +78,6 @@ const GoodsContainer = () => {
             </Typography>
             <GoodsFilter filterData={filterData} setFilterData={setFilterData}/>
             <GoodsCreateForm/>
-
 
             <GoodsList goods={goods}/>
             {paginationInfo.totalPageCount &&

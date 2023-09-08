@@ -206,11 +206,18 @@ class UserHW implements UserInterface, PasswordAuthenticatedUserInterface, JsonS
         ];
     }
 
+    /**
+     * @return Collection|null
+     */
     public function getProducts(): ?Collection
     {
         return $this->products;
     }
 
+    /**
+     * @param Collection|null $products
+     * @return void
+     */
     public function setProducts(?Collection $products): void
     {
         $this->products = $products;

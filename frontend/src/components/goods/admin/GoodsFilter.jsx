@@ -6,22 +6,22 @@ import {Breadcrumbs, FormControl, Link, TextField, Typography} from "@mui/materi
 import {NavLink, useNavigate, useSearchParams} from "react-router-dom";
 import GoodsList from "./GoodsList";
 import {checkFilterItem, fetchFilterData} from "../../../utils/fetchFilterData";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from "dayjs";
+import {DemoItem} from "@mui/x-date-pickers/internals/demo";
+import {DateTimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 
 const GoodsFilter = ({filterData, setFilterData}) => {
 
     const onChangeFilterData = (event) => {
         event.preventDefault();
         let {name, value} = event.target
-        // console.log(name,value)
-
         setFilterData({...filterData, [name]: value})
     };
 
-    const onChangeFilterDate = (event)=>{
-        console.log(event.target)
+    const onChangeFilterDate = (event) => {
+      console.log(event)
     }
 
     return <>
@@ -76,20 +76,6 @@ const GoodsFilter = ({filterData, setFilterData}) => {
                             shrink: true,
                         }}
                     />
-                    {/*<LocalizationProvider dateAdapter={AdapterDayjs}>*/}
-                    {/*    <DatePicker*/}
-                    {/*        name="date[gte]"*/}
-                    {/*        label="Min-Date"*/}
-                    {/*        onChange={onChangeFilterDate}*/}
-                    {/*    />*/}
-                    {/*</LocalizationProvider>*/}
-                    {/*<LocalizationProvider dateAdapter={AdapterDayjs}>*/}
-                    {/*    <DatePicker*/}
-                    {/*        name="lte"*/}
-                    {/*        label="Max-Date"*/}
-                    {/*        onChange={onChangeFilterDate}*/}
-                    {/*    />*/}
-                    {/*</LocalizationProvider>*/}
                     <input type="datetime-local"
                            name="date[after]"
                            onChange={onChangeFilterData}/>
@@ -97,12 +83,6 @@ const GoodsFilter = ({filterData, setFilterData}) => {
                            name="date[before]"
                            onChange={onChangeFilterData}/>
                 </div>
-
-
-                {/*        <label htmlFor="minPrice">MinPrice</label>
-            <input id="name" type="text" name="minPrice" defaultValue={filterData.name??""} onChange={onChangeFilterData}/>
-            <label htmlFor="maxPrice">maxPrice</label>
-            <input id="name" type="text" name="maxPrice" defaultValue={filterData.name??""} onChange={onChangeFilterData}/>*/}
             </FormControl>
         </div>
     </>
