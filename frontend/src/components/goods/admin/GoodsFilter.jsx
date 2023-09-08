@@ -1,16 +1,6 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
-import {responseStatus} from "../../../utils/consts";
-import {Helmet} from "react-helmet-async";
-import {Breadcrumbs, FormControl, Link, TextField, Typography} from "@mui/material";
-import {NavLink, useNavigate, useSearchParams} from "react-router-dom";
-import GoodsList from "./GoodsList";
-import {checkFilterItem, fetchFilterData} from "../../../utils/fetchFilterData";
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from "dayjs";
-import {DemoItem} from "@mui/x-date-pickers/internals/demo";
-import {DateTimePicker} from "@mui/x-date-pickers";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {FormControl, TextField, Typography} from "@mui/material";
+
 
 const GoodsFilter = ({filterData, setFilterData}) => {
 
@@ -19,10 +9,6 @@ const GoodsFilter = ({filterData, setFilterData}) => {
         let {name, value} = event.target
         setFilterData({...filterData, [name]: value})
     };
-
-    const onChangeFilterDate = (event) => {
-      console.log(event)
-    }
 
     return <>
         <div>

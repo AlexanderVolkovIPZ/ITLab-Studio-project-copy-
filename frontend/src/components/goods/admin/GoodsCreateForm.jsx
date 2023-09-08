@@ -1,11 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import {responseStatus} from "../../../utils/consts";
-import {Helmet} from "react-helmet-async";
-import {Breadcrumbs, Button, FormControl, Link, TextField, Typography} from "@mui/material";
-import {NavLink, useNavigate, useSearchParams} from "react-router-dom";
-import GoodsList from "./GoodsList";
-import {checkFilterItem, fetchFilterData} from "../../../utils/fetchFilterData";
+import {Button, FormControl, TextField, Typography} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
@@ -24,21 +20,25 @@ const GoodsCreateForm = () => {
     })
     const onSubmitForm= (event)=>{
         event.preventDefault();
+        let {$y,$M,$D,$H,$m,$s} = formData.date
+        let date = `${$y}-${$M+1}-${$D} ${$H}:${$m}:${$s}`
+        // console.log(date)
+
         axios.post("/api/product-create",{
-            "name": "testProduct123",
-            "count": 1,
-            "price": "1",
-            "imgName": "123",
-            "date": "2023-09-07 18:01:53",
-            "category": "1",
-            "user": "1"
-            // "name":formData.name,
-            // "count":formData.count,
-            // "price":formData.price,
-            // "imgName":formData.img,
-            // "date":formData.date,
-            // "category":formData.category,
-            // "user":formData.user
+            // "name": "testProduct123",
+            // "count": 1,
+            // "price": "1",
+            // "imgName": "123",
+            // "date": "2023-09-07 18:01:53",
+            // "category": "1",
+            // "user": "1"
+            "name":formData.name,
+            "count":formData.count,
+            "price":formData.price,
+            "imgName":formData.img,
+            "date":date,
+            "category":formData.category,
+            "user":formData.user
         },{
             "headers": {
                 "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -54,9 +54,9 @@ const GoodsCreateForm = () => {
             component="form"
             sx={{
                 '& .MuiTextField-root': { m: 1, width: '25ch' },
-                border: '1px solid #ccc', // Любой цвет и стиль обводки, который вам нужен
-                borderRadius: '8px', // Настройте скругление углов, если необходимо
-                padding: '16px', // Добавьте отступ для контента внутри формы
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                padding: '16px',
 
             }}
             noValidate
@@ -140,7 +140,6 @@ const GoodsCreateForm = () => {
             </div>
         </FormControl>
     </>
-
 };
 
 export default GoodsCreateForm;

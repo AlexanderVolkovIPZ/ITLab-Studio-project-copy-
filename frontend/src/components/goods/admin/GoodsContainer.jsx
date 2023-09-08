@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {responseStatus} from "../../../utils/consts";
 import {Helmet} from "react-helmet-async";
-import {Box, Breadcrumbs, Button, FormControl, Link, Pagination, TextField, Typography} from "@mui/material";
+import {Breadcrumbs, Link, Pagination, Typography} from "@mui/material";
 import {NavLink, useNavigate, useSearchParams} from "react-router-dom";
 import GoodsList from "./GoodsList";
 import {checkFilterItem, fetchFilterData} from "../../../utils/fetchFilterData";
